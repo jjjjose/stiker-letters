@@ -109,10 +109,10 @@
       </div>
 
       <div class="field">
-        <label>Altura de franja <small>incluye el contorno · cm</small></label>
+        <label>Altura de franja <small>incluye el contorno · 0,25–20 cm</small></label>
         <div class="height-row">
-          <input id="heightSlider" type="range" min="1" max="5" step="0.1" value="3">
-          <input id="heightNumber" type="number" min="1" max="5" step="0.1" value="3">
+          <input id="heightSlider" type="range" min="0.25" max="20" step="0.01" value="3">
+          <input id="heightNumber" type="number" min="0.25" max="20" step="0.01" value="3">
         </div>
       </div>
 
@@ -494,12 +494,21 @@
         letterSpacingSlider.setAttribute('aria-valuetext', `${value} · ${currentLetterSpacing < 0 ? 'más juntas' : currentLetterSpacing > 0 ? 'más separadas' : 'separación original'}`);
       }
 
+      function clampHeight(value){
+        const parsed = parseFloat(value);
+        return Math.min(Number(heightNumber.max), Math.max(Number(heightNumber.min), Number.isNaN(parsed) ? 3 : parsed));
+      }
+
+      function formatHeight(value){
+        return value.toFixed(2).replace(/(\.\d)0$/, '$1');
+      }
+
       function layout(){
-        const val = Math.min(5, Math.max(1, parseFloat(heightNumber.value) || 3));
+        const val = clampHeight(heightNumber.value);
         updateLetterSpacing();
         currentTargetCm = val;
         heightSlider.value = val;
-        heightNumber.value = val.toFixed(1);
+        heightNumber.value = formatHeight(val);
 
         rowHeightPx = val * CM_TO_PX;
         rowStepPx = rowHeightPx;
@@ -539,8 +548,8 @@
         const wordsOnly = tokens.filter(t=>t.type==='word');
         wordCountEl.textContent = wordsOnly.length;
         guideCountEl.textContent = Math.floor(PAGE_H_CM / val);
-        physicalInfoEl.textContent = `${val.toFixed(1).replace('.',',')} cm`;
-        fontInfoEl.textContent = `Altura de franja: ${val.toFixed(1).replace('.',',')} cm · ${Math.floor(PAGE_H_CM/val)} franjas completas`;
+        physicalInfoEl.textContent = `${formatHeight(val).replace('.',',')} cm`;
+        fontInfoEl.textContent = `Altura de franja: ${formatHeight(val).replace('.',',')} cm · ${Math.floor(PAGE_H_CM/val)} franjas completas`;
 
         const oversizeWords = new Set();
         let pageIndex = 0;
@@ -591,7 +600,7 @@
 
         if (oversizeWords.size){
           const list=[...oversizeWords].slice(0,3).join(', ');
-          warningEl.textContent=`${oversizeWords.size} palabra(s) superan el ancho útil de la hoja a ${val.toFixed(1)} cm: ${list}${oversizeWords.size>3?'…':''}. No se reduce ninguna palabra; baja la altura o la separación entre letras si necesitas que entren completas.`;
+          warningEl.textContent=`${oversizeWords.size} palabra(s) superan el ancho útil de la hoja a ${formatHeight(val)} cm: ${list}${oversizeWords.size>3?'…':''}. No se reduce ninguna palabra; baja la altura o la separación entre letras si necesitas que entren completas.`;
           warningEl.classList.add('show');
         }
         requestAnimationFrame(scalePages);
@@ -611,8 +620,8 @@
       }
 
       function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(layout,55)}
-      heightSlider.addEventListener('input',()=>{heightNumber.value=Number(heightSlider.value).toFixed(1);scheduleLayout()});
-      heightNumber.addEventListener('input',()=>{const n=parseFloat(heightNumber.value);if(!Number.isNaN(n))heightSlider.value=Math.min(5,Math.max(1,n));scheduleLayout()});
+      heightSlider.addEventListener('input',()=>{heightNumber.value=formatHeight(Number(heightSlider.value));scheduleLayout()});
+      heightNumber.addEventListener('input',()=>{heightSlider.value=clampHeight(heightNumber.value);scheduleLayout()});
       letterSpacingSlider.addEventListener('input',()=>{updateLetterSpacing();scheduleLayout()});
       textInput.addEventListener('input',scheduleLayout);
       guidesToggle.addEventListener('change',layout);
