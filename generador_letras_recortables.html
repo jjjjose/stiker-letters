@@ -431,7 +431,7 @@
       }
 
       function verticalPadding(){
-        return stickerBorderPx + cutLinePx / 2 + 2;
+        return stickerBorderPx + cutLinePx / 2 + 2 * Math.min(1, currentTargetCm);
       }
 
       function stickerBox(word){
@@ -512,8 +512,8 @@
 
         rowHeightPx = val * CM_TO_PX;
         rowStepPx = rowHeightPx;
-        stickerBorderPx = Math.max(2, rowHeightPx * .075);
-        cutLinePx = Math.max(.6, rowHeightPx * .009);
+        stickerBorderPx = Math.max(2 * Math.min(1, val), rowHeightPx * .075);
+        cutLinePx = Math.max(.6 * Math.min(1, val), rowHeightPx * .009);
         contourCache.clear();
 
         const sampleWords = ['ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑ', 'abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡()'];
