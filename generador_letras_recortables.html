@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generador de letras recortables</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f0f2f4;
+      --panel:#fff;
+      --surface:#f6f7f8;
+      --ink:#252a31;
+      --muted:#626b76;
+      --border:#dce1e6;
+      --accent:#343d48;
+      --guide:rgba(100,110,120,.4);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,textarea{font:inherit}
+    .app{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh}
+    .controls{position:sticky;top:0;height:100vh;overflow:auto;background:var(--panel);border-right:1px solid var(--border);padding:20px;z-index:5;color-scheme:light}
+    .controls h1{font-size:18px;line-height:1.3;margin-bottom:6px}
+    .controls .subtitle{font-size:12px;line-height:1.45;margin-bottom:16px}
+    .controls .field{margin-bottom:16px}
+    .controls .field label{gap:8px;font-size:12px;margin-bottom:6px}
+    .controls .field small{font-size:10px;text-align:right}
+    .controls textarea{display:block;min-height:120px;padding:10px 12px;border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px}
+    .controls .height-row{grid-template-columns:minmax(0,1fr) 72px;gap:10px}
+    .controls input[type="range"]{margin:0;accent-color:var(--accent)}
+    .controls .spacing-value{padding:7px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+    .controls .spacing-hint{display:flex;justify-content:space-between;margin-top:6px;color:var(--muted);font-size:10px}
+    .controls input[type="number"]{padding:7px 8px;border-radius:8px;background:var(--surface);color:var(--ink);text-align:center;font-size:13px}
+    .controls .field .checkrow{justify-content:flex-start;gap:8px;margin:0;min-height:28px;font-weight:500;line-height:1.4}
+    .controls .checkrow input{flex:none;margin:0;accent-color:var(--accent)}
+    .controls .stats{margin-top:0;gap:8px}
+    .controls .stat{min-width:0;padding:9px 10px;border-radius:8px;background:var(--surface)}
+    .controls .stat b{font-size:16px;line-height:1.3;font-variant-numeric:tabular-nums}
+    .controls .stat span{display:block;font-size:10px;line-height:1.4}
+    .controls .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .controls .btn{padding:9px 10px;border-radius:8px;font-size:12px;color:var(--ink);background:var(--surface)}
+    .controls .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+    .controls .note{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:10px;line-height:1.5}
+    .controls :is(textarea,input[type="number"]):focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(52,61,72,.1)}
+    .controls :is(button,input):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    h1{font-size:20px;line-height:1.2;margin:0 0 8px}
+    .subtitle{font-size:13px;line-height:1.5;color:var(--muted);margin-bottom:22px}
+    .field{margin-bottom:20px}
+    .field label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;margin-bottom:8px}
+    .field small{color:var(--muted);font-weight:500}
+    textarea{width:100%;min-height:230px;resize:vertical;border:1px solid var(--border);border-radius:12px;padding:13px 14px;outline:none;line-height:1.45;background:#fff;transition:border-color .15s,box-shadow .15s}
+    textarea:focus,input[type="number"]:focus{border-color:#a7afb9;box-shadow:0 0 0 3px rgba(20,25,32,.06)}
+    .height-row{display:grid;grid-template-columns:1fr 86px;gap:12px;align-items:center}
+    input[type="range"]{width:100%;accent-color:#161a20}
+    input[type="number"]{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px 9px;outline:none}
+    .checkrow{display:flex;gap:10px;align-items:center;font-size:13px;margin:10px 0}
+    .checkrow input{width:16px;height:16px;accent-color:#15181d}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+    .stat{border:1px solid var(--border);border-radius:11px;padding:11px 12px;background:#fafbfc}
+    .stat b{display:block;font-size:17px;margin-bottom:2px}
+    .stat span{font-size:11px;color:var(--muted)}
+    .actions{display:flex;gap:9px;margin-top:14px}
+    .btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:700;font-size:13px}
+    .btn.primary{background:#111318;color:#fff;border-color:#111318;flex:1}
+    .btn:hover{filter:brightness(.97)}
+    .note{margin-top:14px;font-size:11px;line-height:1.5;color:var(--muted)}
+    .warning{display:none;margin-top:12px;padding:10px 11px;border:1px solid #e2b7b7;background:#fff7f7;border-radius:9px;color:#8f2e2e;font-size:12px;line-height:1.4}
+    .warning.show{display:block}
+    .preview-shell{padding:26px;overflow:auto;min-width:0}
+    .preview-head{display:flex;justify-content:space-between;align-items:center;gap:15px;max-width:1200px;margin:0 auto 16px;color:var(--muted);font-size:12px}
+    .pages{display:flex;flex-direction:column;align-items:center;gap:24px}
+    .page-wrap{position:relative;flex:none}
+    .page{width:27.94cm;height:21.59cm;background:#fff;position:absolute;left:0;top:0;transform-origin:top left;box-shadow:0 12px 34px rgba(20,25,31,.15),0 2px 5px rgba(20,25,31,.08);overflow:hidden}
+    .page-guides{position:absolute;inset:0;pointer-events:none;z-index:0;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--guide-step) - .25mm),var(--guide) calc(var(--guide-step) - .25mm),var(--guide) var(--guide-step));background-size:100% var(--guide-step)}
+    .page.no-guides .page-guides{display:none}
+    .page-number{position:absolute;right:.38cm;bottom:.24cm;font:500 10px/1.2 ui-sans-serif,system-ui,sans-serif;color:#b3b8be;z-index:4}
+    .sheet-content{position:absolute;inset:0 .62cm;overflow:hidden;z-index:1}
+    .line{display:flex;align-items:center;flex-wrap:nowrap;gap:var(--word-gap,.44cm);width:100%;position:absolute;left:0;white-space:nowrap}
+    .sticker{display:block;flex:none;overflow:visible}
+    .oversize-marker{outline:1px solid rgba(190,35,35,.22);outline-offset:2px}
+    @media(max-width:900px){.app{grid-template-columns:1fr}.controls{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border)}.preview-shell{padding:18px 10px 28px}}
+    @media print{
+      @page{size:letter landscape;margin:0}
+      body{background:#fff}
+      .controls,.preview-head{display:none!important}
+      .app{display:block}
+      .preview-shell{padding:0;overflow:visible}
+      .pages{display:block}
+      .page-wrap{width:27.94cm!important;height:21.59cm!important;margin:0!important;break-after:page;page-break-after:always}
+      .page{position:relative!important;transform:none!important;box-shadow:none!important;width:27.94cm!important;height:21.59cm!important}
+      .page-number{display:none}
+      .page:not(.print-guides) .page-guides{display:none!important}
+      *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="controls">
+      <h1>Generador de letras recortables</h1>
+      <div class="subtitle">Cada palabra se convierte en un sticker independiente. Todas las palabras conservan exactamente la misma escala tipográfica.</div>
+
+      <div class="field">
+        <label for="textInput">Texto <small>actualización en tiempo real</small></label>
+        <textarea id="textInput" spellcheck="false">hola como estan</textarea>
+      </div>
+
+      <div class="field">
+        <label>Altura de franja <small>incluye el contorno · cm</small></label>
+        <div class="height-row">
+          <input id="heightSlider" type="range" min="1" max="5" step="0.1" value="3">
+          <input id="heightNumber" type="number" min="1" max="5" step="0.1" value="3">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="letterSpacingSlider">Separación entre letras <small>% de la fuente</small></label>
+        <div class="height-row">
+          <input id="letterSpacingSlider" type="range" min="-10" max="30" step="1" value="0" aria-describedby="letterSpacingHint" aria-valuetext="0 % · separación original">
+          <output id="letterSpacingValue" class="spacing-value" for="letterSpacingSlider">0 %</output>
+        </div>
+        <div id="letterSpacingHint" class="spacing-hint"><span>Más juntas</span><span>Más separadas</span></div>
+      </div>
+
+      <div class="field">
+        <label>Vista y corte</label>
+        <label class="checkrow"><input id="guidesToggle" type="checkbox" checked> Mostrar líneas de división</label>
+        <label class="checkrow"><input id="printGuidesToggle" type="checkbox"> Imprimir también las divisiones</label>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b id="pageCount">1</b><span>hojas Carta</span></div>
+        <div class="stat"><b id="guideCount">7</b><span>franjas completas por hoja</span></div>
+      </div>
+      <div class="stats" style="margin-top:8px">
+        <div class="stat"><b id="wordCount">0</b><span>palabras</span></div>
+        <div class="stat"><b id="physicalInfo">3,0 cm</b><span>altura de franja</span></div>
+      </div>
+
+      <div id="warning" class="warning"></div>
+
+      <div class="actions">
+        <button class="btn" id="clearBtn" type="button">Limpiar</button>
+        <button class="btn primary" id="printBtn" type="button">Imprimir / PDF</button>
+      </div>
+
+      <div class="note">
+        Las líneas horizontales se dividen usando exactamente la altura elegida. Por ejemplo, a <b>3 cm</b>, una hoja Carta de <b>21,59 cm</b> muestra <b>7 franjas completas</b> de 3 cm y un resto de 0,59 cm. El tamaño de las letras se calibra con una referencia fija que incluye mayúsculas, tildes y descendentes como p, j y g, contando el contorno real sin reservar el espacio invisible de la fuente. Añadir o quitar letras no cambia la escala. Se deja una pequeña holgura de seguridad dentro de cada franja y se mantiene la misma línea base en todas las filas. La separación entre letras es proporcional al tamaño de la fuente: <b>0 %</b> conserva la original, los valores negativos las juntan y los positivos las separan, sin cambiar el espacio entre palabras. Cada palabra tiene una silueta blanca continua que sigue las letras, con entradas redondeadas entre ellas y una línea exterior gris fina, sin cortes en los huecos interiores. La tipografía redondeada aproxima el estilo de la referencia.
+      </div>
+    </aside>
+
+    <main class="preview-shell">
+      <div class="preview-head">
+        <span>Previsualización · Carta horizontal 27,94 × 21,59 cm</span>
+        <span id="fontInfo">Altura mayúscula: 3,0 cm</span>
+      </div>
+      <div id="pages" class="pages"></div>
+    </main>
+  </div>
+
+  <canvas id="measureCanvas" width="1" height="1" hidden></canvas>
+
+  <script>
+    (() => {
+      const CM_TO_PX = 96 / 2.54;
+      const PAGE_W_CM = 27.94;
+      const PAGE_H_CM = 21.59;
+      const PAGE_PAD_CM = 0.62;
+      const CONTENT_W_PX = (PAGE_W_CM - PAGE_PAD_CM * 2) * CM_TO_PX;
+      const CONTENT_H_PX = PAGE_H_CM * CM_TO_PX;
+      const WORD_GAP_CM = 0.44;
+      const WORD_GAP_PX = WORD_GAP_CM * CM_TO_PX;
+
+      const textInput = document.getElementById('textInput');
+      const heightSlider = document.getElementById('heightSlider');
+      const heightNumber = document.getElementById('heightNumber');
+      const letterSpacingSlider = document.getElementById('letterSpacingSlider');
+      const letterSpacingValue = document.getElementById('letterSpacingValue');
+      const guidesToggle = document.getElementById('guidesToggle');
+      const printGuidesToggle = document.getElementById('printGuidesToggle');
+      const pagesEl = document.getElementById('pages');
+      const pageCountEl = document.getElementById('pageCount');
+      const guideCountEl = document.getElementById('guideCount');
+      const wordCountEl = document.getElementById('wordCount');
+      const physicalInfoEl = document.getElementById('physicalInfo');
+      const warningEl = document.getElementById('warning');
+      const fontInfoEl = document.getElementById('fontInfo');
+      const printBtn = document.getElementById('printBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const canvas = document.getElementById('measureCanvas');
+      const ctx = canvas.getContext('2d');
+      const contourCanvas = document.createElement('canvas');
+      const contourCache = new Map();
+
+      let debounceTimer;
+      let currentFontPx = 120;
+      let currentLetterSpacing = 0;
+      let currentTargetCm = 3;
+      let stickerBorderPx = 7;
+      let cutLinePx = 1;
+      let rowHeightPx = 150;
+      let rowStepPx = 165;
+      let referenceAscent = 0;
+      let referenceDescent = 0;
+
+      function fontFamily(){
+        return '"Fredoka", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif';
+      }
+
+      function letterSpacingPx(px){
+        return px * currentLetterSpacing / 100;
+      }
+
+      function setCanvasFont(px){
+        ctx.font = `700 ${px}px ${fontFamily()}`;
+        ctx.textBaseline = 'alphabetic';
+        ctx.letterSpacing = `${letterSpacingPx(px)}px`;
+      }
+
+      function measureText(word){
+        setCanvasFont(currentFontPx);
+        const m = ctx.measureText(word);
+        // Canvas añade espacio tras la última letra; no debe ampliar el sticker.
+        const advance = m.width - letterSpacingPx(currentFontPx);
+        return {
+          width: Math.max(advance, m.actualBoundingBoxRight || advance) + Math.max(0, m.actualBoundingBoxLeft || 0),
+          left: Math.max(0, m.actualBoundingBoxLeft || 0),
+          ascent: Math.max(0, m.actualBoundingBoxAscent),
+          descent: Math.max(0, m.actualBoundingBoxDescent)
+        };
+      }
+
+      function tokenize(text){
+        const normalized = text.replace(/\r\n?/g, '\n');
+        const tokens = [];
+        normalized.split('\n').forEach((line, i, arr) => {
+          const words = line.trim().split(/\s+/).filter(Boolean);
+          words.forEach(w => tokens.push({type:'word', value:w}));
+          if (i < arr.length - 1) tokens.push({type:'newline'});
+        });
+        return tokens;
+      }
+
+      function contourPath(word, box){
+        if (contourCache.has(word)) return contourCache.get(word);
+        const scale = 3;
+        const width = Math.ceil(box.width * scale);
+        const height = Math.ceil(box.height * scale);
+        contourCanvas.width = width;
+        contourCanvas.height = height;
+        const c = contourCanvas.getContext('2d', {willReadFrequently:true});
+        c.scale(scale, scale);
+        c.font = `700 ${currentFontPx}px ${fontFamily()}`;
+        c.textBaseline = 'alphabetic';
+        c.letterSpacing = `${letterSpacingPx(currentFontPx)}px`;
+        c.lineJoin = 'round';
+        c.lineCap = 'round';
+        c.lineWidth = stickerBorderPx * 2;
+        c.strokeText(word, box.x, box.y);
+        c.fillText(word, box.x, box.y);
+        let pixels = c.getImageData(0, 0, width, height).data;
+        const mask = new Uint8Array(width * height);
+        for (let i = 0; i < mask.length; i++) mask[i] = pixels[i * 4 + 3] >= 128 ? 1 : 0;
+        const queue = new Int32Array(mask.length);
+        const labels = new Int32Array(mask.length);
+        let parts = 0;
+        function neighbors(index){
+          const x = index % width;
+          return [x > 0 ? index - 1 : -1, x + 1 < width ? index + 1 : -1, index >= width ? index - width : -1, index + width < mask.length ? index + width : -1];
+        }
+        for (let i = 0; i < mask.length; i++){
+          if (!mask[i] || labels[i]) continue;
+          parts++;
+          let count = 1;
+          queue[0] = i;
+          labels[i] = parts;
+          for (let head = 0; head < count; head++){
+            for (const next of neighbors(queue[head])){
+              if (next >= 0 && mask[next] && !labels[next]){
+                labels[next] = parts;
+                queue[count++] = next;
+              }
+            }
+          }
+        }
+        if (parts > 1){
+          // Unir solo las partes más próximas conserva los entrantes entre letras.
+          const origins = new Int32Array(mask.length);
+          const parents = Int32Array.from({length:parts + 1}, (_, i) => i);
+          function root(part){
+            while (parents[part] !== part) part = parents[part];
+            return part;
+          }
+          let count = 0;
+          for (let i = 0; i < mask.length; i++){
+            if (!mask[i]) continue;
+            origins[i] = i;
+            queue[count++] = i;
+          }
+          c.lineWidth = stickerBorderPx;
+          for (let head = 0; head < count && parts > 1; head++){
+            const index = queue[head];
+            for (const next of neighbors(index)){
+              if (next < 0) continue;
+              if (!labels[next]){
+                labels[next] = labels[index];
+                origins[next] = origins[index];
+                queue[count++] = next;
+              }else if (root(labels[next]) !== root(labels[index])){
+                const a = origins[index];
+                const b = origins[next];
+                c.beginPath();
+                c.moveTo((a % width + .5) / scale, (Math.floor(a / width) + .5) / scale);
+                c.lineTo((b % width + .5) / scale, (Math.floor(b / width) + .5) / scale);
+                c.stroke();
+                parents[root(labels[next])] = root(labels[index]);
+                parts--;
+              }
+            }
+          }
+          pixels = c.getImageData(0, 0, width, height).data;
+          for (let i = 0; i < mask.length; i++) mask[i] = pixels[i * 4 + 3] >= 128 ? 1 : 0;
+        }
+
+        // Rellenar los huecos evita líneas de corte dentro de «o», «a» o «e».
+        const exterior = new Uint8Array(mask.length);
+        let tail = 0;
+        function visit(index){
+          if (!mask[index] && !exterior[index]){
+            exterior[index] = 1;
+            queue[tail++] = index;
+          }
+        }
+        for (let x = 0; x < width; x++){
+          visit(x);
+          visit((height - 1) * width + x);
+        }
+        for (let y = 0; y < height; y++){
+          visit(y * width);
+          visit(y * width + width - 1);
+        }
+        for (let head = 0; head < tail; head++){
+          const index = queue[head];
+          const x = index % width;
+          if (x > 0) visit(index - 1);
+          if (x + 1 < width) visit(index + 1);
+          if (index >= width) visit(index - width);
+          if (index + width < mask.length) visit(index + width);
+        }
+        for (let i = 0; i < mask.length; i++) if (!exterior[i]) mask[i] = 1;
+
+        const edges = new Map();
+        const stride = width + 1;
+        function edge(x1, y1, x2, y2){
+          const start = y1 * stride + x1;
+          if (!edges.has(start)) edges.set(start, []);
+          edges.get(start).push(y2 * stride + x2);
+        }
+        for (let y = 0; y < height; y++){
+          for (let x = 0; x < width; x++){
+            const i = y * width + x;
+            if (!mask[i]) continue;
+            if (y === 0 || !mask[i - width]) edge(x, y, x + 1, y);
+            if (x === width - 1 || !mask[i + 1]) edge(x + 1, y, x + 1, y + 1);
+            if (y === height - 1 || !mask[i + width]) edge(x + 1, y + 1, x, y + 1);
+            if (x === 0 || !mask[i - 1]) edge(x, y + 1, x, y);
+          }
+        }
+        const paths = [];
+        while (edges.size){
+          const start = edges.keys().next().value;
+          const points = [];
+          let cursor = start;
+          do{
+            points.push({x:(cursor % stride) / scale, y:Math.floor(cursor / stride) / scale});
+            const current = cursor;
+            const next = edges.get(current);
+            cursor = next.pop();
+            if (!next.length) edges.delete(current);
+          }while (cursor !== start);
+          if (points.length < 4) continue;
+          const sampled = points.filter((_, i) => i % 4 === 0);
+          const mid = (a, b) => `${((a.x + b.x) / 2).toFixed(2)} ${((a.y + b.y) / 2).toFixed(2)}`;
+          let d = `M ${mid(sampled[sampled.length - 1], sampled[0])}`;
+          sampled.forEach((p, i) => {
+            d += ` Q ${p.x.toFixed(2)} ${p.y.toFixed(2)} ${mid(p, sampled[(i + 1) % sampled.length])}`;
+          });
+          paths.push(`${d} Z`);
+        }
+        const path = paths.join(' ');
+        contourCache.set(word, path);
+        return path;
+      }
+
+      function makeStickerSvg(word, oversize=false){
+        const box = stickerBox(word);
+        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('class','sticker' + (oversize ? ' oversize-marker' : ''));
+        svg.setAttribute('width', box.width);
+        svg.setAttribute('height', box.height);
+        svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+        svg.setAttribute('role','img');
+        svg.setAttribute('aria-label', word);
+        svg.style.width = `${box.width}px`;
+        svg.style.height = `${box.height}px`;
+
+        const outline = document.createElementNS('http://www.w3.org/2000/svg','path');
+        outline.setAttribute('class','sticker-outline');
+        outline.setAttribute('d', contourPath(word, box));
+        outline.setAttribute('fill','#fff');
+        outline.setAttribute('stroke','#929292');
+        outline.setAttribute('stroke-width',cutLinePx);
+        outline.setAttribute('stroke-linejoin','round');
+        outline.setAttribute('stroke-linecap','round');
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+        text.setAttribute('x',box.x);
+        text.setAttribute('y',box.y);
+        text.setAttribute('fill','#000');
+        text.setAttribute('font-size',currentFontPx);
+        text.setAttribute('font-family',fontFamily());
+        text.setAttribute('font-weight','700');
+        text.setAttribute('letter-spacing',letterSpacingPx(currentFontPx));
+        text.textContent = word;
+
+        svg.append(outline,text);
+        return {svg,width:box.width,height:box.height};
+      }
+
+      function verticalPadding(){
+        return stickerBorderPx + cutLinePx / 2 + 2;
+      }
+
+      function stickerBox(word){
+        const m = measureText(word);
+        const outer = stickerBorderPx + cutLinePx + 2.5;
+        const vertical = verticalPadding();
+        return {width:Math.ceil(m.width + outer * 2),height:Math.ceil(m.ascent + m.descent + vertical * 2),x:outer + m.left,y:vertical + m.ascent};
+      }
+
+      function createPage(index){
+        const wrap = document.createElement('div');
+        wrap.className = 'page-wrap';
+        const page = document.createElement('section');
+        page.className = 'page';
+        if (!guidesToggle.checked) page.classList.add('no-guides');
+        if (printGuidesToggle.checked) page.classList.add('print-guides');
+
+        const guides = document.createElement('div');
+        guides.className = 'page-guides';
+        guides.style.setProperty('--guide-step', `${currentTargetCm}cm`);
+
+        const content = document.createElement('div');
+        content.className = 'sheet-content';
+        content.style.setProperty('--word-gap', `${WORD_GAP_CM}cm`);
+
+        const num = document.createElement('div');
+        num.className = 'page-number';
+        num.textContent = `Hoja ${index + 1}`;
+
+        page.append(guides,content,num);
+        wrap.appendChild(page);
+        pagesEl.appendChild(wrap);
+        return {wrap,page,content};
+      }
+
+      function addLine(pageObj, lineWords, y, oversizeWords){
+        if (!lineWords.length) return;
+        const line = document.createElement('div');
+        line.className = 'line';
+        line.style.top = `${y}px`;
+        line.style.height = `${rowHeightPx}px`;
+        const metrics = lineWords.map(word => measureText(word));
+        const maxAscent = Math.max(referenceAscent, ...metrics.map(m => m.ascent));
+        const maxDescent = Math.max(referenceDescent, ...metrics.map(m => m.descent));
+        const outer = verticalPadding();
+        const baseline = (rowHeightPx - maxAscent - maxDescent) / 2 + maxAscent;
+        line.style.alignItems = 'flex-start';
+        lineWords.forEach((word, index) => {
+          const made = makeStickerSvg(word, oversizeWords.has(word));
+          made.svg.style.marginTop = `${baseline - outer - metrics[index].ascent}px`;
+          line.appendChild(made.svg);
+        });
+        pageObj.content.appendChild(line);
+      }
+
+      function updateLetterSpacing(){
+        currentLetterSpacing = Math.min(30, Math.max(-10, Number(letterSpacingSlider.value) || 0));
+        const value = `${currentLetterSpacing > 0 ? '+' : ''}${currentLetterSpacing} %`;
+        letterSpacingValue.value = value;
+        letterSpacingSlider.setAttribute('aria-valuetext', `${value} · ${currentLetterSpacing < 0 ? 'más juntas' : currentLetterSpacing > 0 ? 'más separadas' : 'separación original'}`);
+      }
+
+      function layout(){
+        const val = Math.min(5, Math.max(1, parseFloat(heightNumber.value) || 3));
+        updateLetterSpacing();
+        currentTargetCm = val;
+        heightSlider.value = val;
+        heightNumber.value = val.toFixed(1);
+
+        rowHeightPx = val * CM_TO_PX;
+        rowStepPx = rowHeightPx;
+        stickerBorderPx = Math.max(2, rowHeightPx * .075);
+        cutLinePx = Math.max(.6, rowHeightPx * .009);
+        contourCache.clear();
+
+        const sampleWords = ['ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑ', 'abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡()'];
+        const availableHeight = rowHeightPx - verticalPadding() * 2 - 1;
+        let low = 0;
+        let high = rowHeightPx * 4;
+        // Una referencia fija evita cambios de escala al escribir p, j, g o tildes.
+        for (let iteration = 0; iteration < 18; iteration++){
+          const candidate = (low + high) / 2;
+          setCanvasFont(candidate);
+          let ascent = 0;
+          let descent = 0;
+          for (const word of sampleWords){
+            const m = ctx.measureText(word);
+            ascent = Math.max(ascent, m.actualBoundingBoxAscent);
+            descent = Math.max(descent, m.actualBoundingBoxDescent);
+          }
+          if (ascent + descent <= availableHeight) low = candidate;
+          else high = candidate;
+        }
+        currentFontPx = low;
+        setCanvasFont(currentFontPx);
+        const referenceMetrics = sampleWords.map(word => ctx.measureText(word));
+        referenceAscent = Math.max(...referenceMetrics.map(m => m.actualBoundingBoxAscent));
+        referenceDescent = Math.max(...referenceMetrics.map(m => m.actualBoundingBoxDescent));
+
+        pagesEl.innerHTML = '';
+        warningEl.classList.remove('show');
+        warningEl.textContent = '';
+
+        const tokens = tokenize(textInput.value);
+        const wordsOnly = tokens.filter(t=>t.type==='word');
+        wordCountEl.textContent = wordsOnly.length;
+        guideCountEl.textContent = Math.floor(PAGE_H_CM / val);
+        physicalInfoEl.textContent = `${val.toFixed(1).replace('.',',')} cm`;
+        fontInfoEl.textContent = `Altura de franja: ${val.toFixed(1).replace('.',',')} cm · ${Math.floor(PAGE_H_CM/val)} franjas completas`;
+
+        const oversizeWords = new Set();
+        let pageIndex = 0;
+        let page = createPage(pageIndex);
+        let y = 0;
+        let lineWords = [];
+        let lineWidth = 0;
+
+        function newPage(){
+          pageIndex += 1;
+          page = createPage(pageIndex);
+          y = 0;
+        }
+        function ensureVertical(){
+          if (y + rowHeightPx > CONTENT_H_PX + .5) newPage();
+        }
+        function flushLine(blank=false){
+          if (lineWords.length){
+            ensureVertical();
+            addLine(page,lineWords,y,oversizeWords);
+            y += rowStepPx;
+            lineWords=[];
+            lineWidth=0;
+          } else if (blank){
+            ensureVertical();
+            y += rowStepPx;
+          }
+        }
+
+        for (const token of tokens){
+          if (token.type==='newline'){
+            flushLine(false);
+            continue;
+          }
+          const box = stickerBox(token.value);
+          if (box.width > CONTENT_W_PX) oversizeWords.add(token.value);
+          const needed = lineWords.length ? WORD_GAP_PX + box.width : box.width;
+          if (lineWords.length && lineWidth + needed > CONTENT_W_PX){
+            flushLine(false);
+          }
+          if (!lineWords.length) ensureVertical();
+          lineWords.push(token.value);
+          lineWidth += (lineWords.length>1 ? WORD_GAP_PX : 0) + box.width;
+        }
+        flushLine(false);
+
+        pageCountEl.textContent = pagesEl.children.length || 1;
+
+        if (oversizeWords.size){
+          const list=[...oversizeWords].slice(0,3).join(', ');
+          warningEl.textContent=`${oversizeWords.size} palabra(s) superan el ancho útil de la hoja a ${val.toFixed(1)} cm: ${list}${oversizeWords.size>3?'…':''}. No se reduce ninguna palabra; baja la altura o la separación entre letras si necesitas que entren completas.`;
+          warningEl.classList.add('show');
+        }
+        requestAnimationFrame(scalePages);
+      }
+
+      function scalePages(){
+        const available=Math.max(280,pagesEl.clientWidth-4);
+        const naturalW=PAGE_W_CM*CM_TO_PX;
+        const naturalH=PAGE_H_CM*CM_TO_PX;
+        const scale=Math.min(1,available/naturalW);
+        pagesEl.querySelectorAll('.page-wrap').forEach(wrap=>{
+          const page=wrap.querySelector('.page');
+          page.style.transform=`scale(${scale})`;
+          wrap.style.width=`${naturalW*scale}px`;
+          wrap.style.height=`${naturalH*scale}px`;
+        });
+      }
+
+      function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(layout,55)}
+      heightSlider.addEventListener('input',()=>{heightNumber.value=Number(heightSlider.value).toFixed(1);scheduleLayout()});
+      heightNumber.addEventListener('input',()=>{const n=parseFloat(heightNumber.value);if(!Number.isNaN(n))heightSlider.value=Math.min(5,Math.max(1,n));scheduleLayout()});
+      letterSpacingSlider.addEventListener('input',()=>{updateLetterSpacing();scheduleLayout()});
+      textInput.addEventListener('input',scheduleLayout);
+      guidesToggle.addEventListener('change',layout);
+      printGuidesToggle.addEventListener('change',layout);
+      printBtn.addEventListener('click',()=>window.print());
+      clearBtn.addEventListener('click',()=>{textInput.value='';layout();textInput.focus()});
+      window.addEventListener('resize',scalePages);
+
+      async function boot(){
+        try{
+          if(document.fonts&&document.fonts.load){
+            await document.fonts.load('700 100px "Fredoka"');
+            await document.fonts.ready;
+          }
+        }catch(e){}
+        layout();
+      }
+      boot();
+    })();
+  </script>
+</body>
+</html>
