@@ -254,9 +254,14 @@
         }));
       }
 
+      function contourCacheKey(word){
+        return `${word}|${activeFont}|${activeVariant.weight}|${activeVariant.style}|${Math.round(currentFontPx*10)}|${currentLetterSpacing}|${Math.round(stickerBorderPx*10)}`;
+      }
+
       function contourPath(word, box){
-        if (contourCache.has(word)) return contourCache.get(word);
-        const scale = Math.min(3, 8192 / Math.max(box.width, box.height), Math.sqrt(2000000 / (box.width * box.height)));
+        const cacheKey = contourCacheKey(word);
+        if (contourCache.has(cacheKey)) return contourCache.get(cacheKey);
+        const scale = Math.min(1.5, 4096 / Math.max(box.width, box.height), Math.sqrt(500000 / (box.width * box.height)));
         const width = Math.ceil(box.width * scale);
         const height = Math.ceil(box.height * scale);
         contourCanvas.width = width;
@@ -392,7 +397,7 @@
             if (!next.length) edges.delete(current);
           }while (cursor !== start);
           if (points.length < 4) continue;
-          const sampled = points.filter((_, i) => i % 4 === 0);
+          const sampled = points.filter((_, i) => i % 3 === 0);
           const mid = (a, b) => `${((a.x + b.x) / 2).toFixed(2)} ${((a.y + b.y) / 2).toFixed(2)}`;
           let d = `M ${mid(sampled[sampled.length - 1], sampled[0])}`;
           sampled.forEach((p, i) => {
@@ -401,7 +406,8 @@
           paths.push(`${d} Z`);
         }
         const path = paths.join(' ');
-        contourCache.set(word, path);
+        if (contourCache.size > 3000) contourCache.clear();
+        contourCache.set(cacheKey, path);
         return path;
       }
 
@@ -456,6 +462,7 @@
       function createPage(index){
         const wrap = document.createElement('div');
         wrap.className = 'page-wrap';
+        wrap.dataset.pageIndex = String(index);
         const page = document.createElement('section');
         page.className = 'page';
         if (!guidesToggle.checked) page.classList.add('no-guides');
@@ -476,8 +483,36 @@
         page.append(guides,content,num);
         wrap.appendChild(page);
         pagesEl.appendChild(wrap);
-        return {wrap,page,content};
+        return {wrap,page,content,rendered:false};
       }
+
+      let pagesData = [];
+      let currentOversizeWords = new Set();
+
+      function renderPageContent(idx){
+        const pData = pagesData[idx];
+        if (!pData || pData.pageObj.rendered) return;
+        pData.pageObj.rendered = true;
+        for (const line of pData.lines){
+          addLine(pData.pageObj, line.lineWords, line.y, currentOversizeWords);
+        }
+      }
+
+      function renderAllPages(){
+        for (let i = 0; i < pagesData.length; i++){
+          renderPageContent(i);
+        }
+      }
+
+      const pageObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.pageIndex);
+            renderPageContent(idx);
+            pageObserver.unobserve(entry.target);
+          }
+        }
+      }, { root: null, rootMargin: '400px 0px' });
 
       function addLine(pageObj, lineWords, y, oversizeWords){
         if (!lineWords.length) return;
@@ -531,7 +566,6 @@
         rowStepPx = rowHeightPx;
         stickerBorderPx = Math.max(2 * Math.min(1, val), rowHeightPx * Number(borderSlider.value) / 100);
         cutLinePx = Math.max(.6 * Math.min(1, val), rowHeightPx * .009);
-        contourCache.clear();
 
         const sampleWords = REFERENCE;
         const availableHeight = rowHeightPx - verticalPadding() * 2 - 1;
@@ -558,6 +592,7 @@
         referenceDescent = Math.max(...referenceMetrics.map(m => m.actualBoundingBoxDescent));
 
         pagesEl.innerHTML = '';
+        pageObserver.disconnect();
         warningEl.classList.remove('show');
         warningEl.textContent = '';
 
@@ -570,15 +605,19 @@
         $('configSummary').textContent = `${FONTS.get(activeFont).name} · ${paper.name} · ${measureLabel(paperWidthMm)} × ${measureLabel(paperHeightMm)}`;
 
         const oversizeWords = new Set();
-        let pageIndex = 0;
-        let page = createPage(pageIndex);
+        currentOversizeWords = oversizeWords;
+        pagesData = [];
+        let currentPage = createPage(0);
+        let currentPageData = { pageObj: currentPage, lines: [] };
+        pagesData.push(currentPageData);
         let y = 0;
         let lineWords = [];
         let lineWidth = 0;
 
         function newPage(){
-          pageIndex += 1;
-          page = createPage(pageIndex);
+          currentPage = createPage(pagesData.length);
+          currentPageData = { pageObj: currentPage, lines: [] };
+          pagesData.push(currentPageData);
           y = 0;
         }
         function ensureVertical(){
@@ -587,7 +626,7 @@
         function flushLine(blank=false){
           if (lineWords.length){
             ensureVertical();
-            addLine(page,lineWords,y,oversizeWords);
+            currentPageData.lines.push({ y, lineWords: [...lineWords] });
             y += rowStepPx;
             lineWords=[];
             lineWidth=0;
@@ -625,13 +664,22 @@
         }
         flushLine(false);
 
-        pageCountEl.textContent = pagesEl.children.length || 1;
+        pageCountEl.textContent = pagesData.length || 1;
 
         if (oversizeWords.size){
           const list=[...oversizeWords].slice(0,3).join(', ');
           warningEl.textContent=`${oversizeWords.size} palabra(s) superan el ancho útil de la hoja a ${formatHeight(val)} cm: ${list}${oversizeWords.size>3?'…':''}. No se reduce ninguna palabra; baja la altura o la separación entre letras si necesitas que entren completas.`;
           warningEl.classList.add('show');
         }
+
+        // Render visible pages immediately (first 2 pages), observe the rest
+        renderPageContent(0);
+        if (pagesData.length > 1) renderPageContent(1);
+
+        for (let i = 2; i < pagesData.length; i++){
+          pageObserver.observe(pagesData[i].pageObj.wrap);
+        }
+
         requestAnimationFrame(scalePages);
       }
 
@@ -774,7 +822,7 @@
         }finally{if(revision===fontRequest){selectionBusy=false;updatePrintState();}}
       }
       function requestLayout(){fontReady=selectFont(selectedFont,variantSelect.value||variantKey(activeVariant));return fontReady;}
-      function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(requestLayout,90);}
+      function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(requestLayout,50);}
       async function importFont(){
         const button=$('loadFontBtn');button.disabled=true;setStatus('importStatus','Consultando Google Fonts…');
         try{
@@ -951,11 +999,12 @@
         unit=$('unitSelect').value;populatePapers();syncMeasures();requestLayout();
       });
       paperSelect.addEventListener('change',changePaper);$('orientationSelect').addEventListener('change',changePaper);
-      heightSlider.addEventListener('input',()=>{targetMm=Number(heightSlider.value);heightNumber.value=displayMeasure(targetMm);commitMeasures();});
-      marginSlider.addEventListener('input',()=>{marginMm=Number(marginSlider.value);marginNumber.value=displayMeasure(marginMm);commitMeasures();});
-      $('zeroMarginBtn')?.addEventListener('click',()=>{marginMm=0;marginNumber.value=displayMeasure(0);commitMeasures();});
-      wordGapSlider.addEventListener('input',()=>{gapMm=Number(wordGapSlider.value);$('wordGapNumber').value=displayMeasure(gapMm);commitMeasures();});
-      for(const slider of [borderSlider,letterSpacingSlider])slider.addEventListener('input',()=>{updateSpacingOutputs();updateLetterSpacing();scheduleLayout();});
+      heightSlider.addEventListener('input',()=>{targetMm=Number(heightSlider.value);heightNumber.value=displayMeasure(targetMm);heightSlider.setAttribute('aria-valuetext',measureLabel(targetMm));scheduleLayout();});
+      marginSlider.addEventListener('input',()=>{marginMm=Number(marginSlider.value);marginNumber.value=displayMeasure(marginMm);marginSlider.setAttribute('aria-valuetext',marginMm===0?'Sin márgenes':measureLabel(marginMm));scheduleLayout();});
+      $('zeroMarginBtn')?.addEventListener('click',()=>{marginMm=0;marginNumber.value=displayMeasure(0);marginSlider.value=0;commitMeasures();});
+      wordGapSlider.addEventListener('input',()=>{gapMm=Number(wordGapSlider.value);$('wordGapNumber').value=displayMeasure(gapMm);wordGapSlider.setAttribute('aria-valuetext',measureLabel(gapMm));scheduleLayout();});
+      borderSlider.addEventListener('input',()=>{borderValue.value=Number(borderSlider.value).toLocaleString('es');borderSlider.setAttribute('aria-valuetext',borderValue.value+' % de la franja');scheduleLayout();});
+      letterSpacingSlider.addEventListener('input',()=>{updateLetterSpacing();scheduleLayout();});
       textInput.addEventListener('input',scheduleLayout);
       for(const el of [cleanWhitespaceToggle,guidesToggle,printGuidesToggle])el.addEventListener('change',requestLayout);
       variantSelect.addEventListener('change',()=>{fontReady=selectFont(selectedFont,variantSelect.value);});
@@ -965,9 +1014,10 @@
         if(!commitPaper()||!commitMeasures())return;
         clearTimeout(debounceTimer);await requestLayout();let pending;
         do{pending=fontReady;await pending;}while(pending!==fontReady);
+        renderAllPages();
         if(!invalidPaper&&!invalidMeasure&&!selectionBusy)window.print();
       });
-      window.addEventListener('beforeprint',()=>{if(!selectionBusy&&!invalidPaper&&!invalidMeasure)layout();});
+      window.addEventListener('beforeprint',()=>{if(!selectionBusy&&!invalidPaper&&!invalidMeasure){layout();renderAllPages();}});
       // Panel único; cambiar la ubicación o cerrarlo nunca altera los ajustes.
       const configToggle=$('configToggle'),configPanel=$('configPanel');
       function setPanel(open){
