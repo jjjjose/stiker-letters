@@ -1,0 +1,196 @@
+// Metadatos locales; no autoriza publicación o redistribución.
+window.LOCAL_FONT_CATALOG = [
+  {
+    "id": "hello-farmer-2",
+    "name": "Hello Farmer",
+    "url": "fonts/hello-farmer-2/original/hello%20farmer.otf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.dafont.com/es/hello-farmer-2.font",
+    "downloadUrl": "https://dl.dafont.com/dl/?f=hello_farmer_2",
+    "licenseLabel": "Demo — solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "embedding": {
+      "fsType": 0,
+      "technicalPermission": "Installable",
+      "webStatus": "not-confirmed",
+      "integrationAllowed": true,
+      "note": "Habilitación solicitada solo para uso local personal; no constituye permiso de publicación web o redistribución. No se encontró prohibición web expresa en las notas disponibles. Confirmar con el autor antes de publicar.",
+      "integrationScope": "local-personal-only"
+    },
+    "archive": "fonts/hello-farmer-2/hello-farmer-2.zip",
+    "sha256": "bdd0fa90402c085238fffaf355e4c9f18dd05ce4c31d82a8493dc275205d72a6",
+    "archiveSha256": "d8b6255f21b12bce1b0e270e9860bb82a0b0645c3bee5e74be06ab7767075873",
+    "evidence": [
+      "fonts/hello-farmer-2/source.html",
+      "fonts/hello-farmer-2/source-text.txt"
+    ],
+    "missingSpanish": []
+  },
+  {
+    "id": "baby-angella",
+    "name": "Baby Angella",
+    "url": "fonts/baby-angella/original/BabyAngella-Regular.ttf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.dafont.com/es/baby-angella.font",
+    "downloadUrl": "https://dl.dafont.com/dl/?f=baby_angella",
+    "licenseLabel": "Demo — solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "¿",
+      "complete": false
+    },
+    "embedding": {
+      "fsType": 8,
+      "technicalPermission": "Editable",
+      "webStatus": "not-confirmed",
+      "integrationAllowed": true,
+      "note": "Habilitación solicitada solo para uso local personal; no constituye permiso de publicación web o redistribución. No se encontró prohibición web expresa en las notas disponibles. Confirmar con el autor antes de publicar.",
+      "integrationScope": "local-personal-only"
+    },
+    "archive": "fonts/baby-angella/baby-angella.zip",
+    "sha256": "6483bf11c2abfa70a1724d00e2297e0b0e167281e72390e044dd8fb43b9ba686",
+    "archiveSha256": "7cd4abaf93ee70b639735123e159bdce950230134a3c22518fcee81b0c70a083",
+    "evidence": [
+      "fonts/baby-angella/source.html",
+      "fonts/baby-angella/source-text.txt"
+    ],
+    "missingSpanish": [
+      "¿"
+    ]
+  },
+  {
+    "id": "roklin",
+    "name": "Roklin",
+    "url": "fonts/roklin/original/Roklin.ttf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.dafont.com/es/roklin.font",
+    "downloadUrl": "https://dl.dafont.com/dl/?f=roklin",
+    "licenseLabel": "Demo — solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "embedding": {
+      "fsType": 4,
+      "technicalPermission": "Preview & Print only",
+      "webStatus": "requires-separate-license",
+      "integrationAllowed": false,
+      "note": "Se requiere licencia Webfont; generadores de diseños pueden requerir Server. No integrar esta demo.",
+      "integrationScope": "blocked"
+    },
+    "archive": "fonts/roklin/roklin.zip",
+    "sha256": "1ccc4f8ef0b6633889e730d6ffd437e593f7d8586203ffc3119eb6db649801d3",
+    "archiveSha256": "7f45a56bf3ab5e01b42f0cdaff8d2feb166c2f214c4ac3af418d66ce23f29a8a",
+    "evidence": [
+      "fonts/roklin/source.html",
+      "fonts/roklin/source-text.txt",
+      "fonts/roklin/original/Note of the author.txt",
+      "fonts/roklin/author-license.txt"
+    ],
+    "missingSpanish": []
+  },
+  {
+    "id": "homesweet",
+    "name": "Homesweet",
+    "url": "fonts/homesweet/original/Homesweet.otf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.dafont.com/es/homesweet.font",
+    "downloadUrl": "https://dl.dafont.com/dl/?f=homesweet",
+    "licenseLabel": "Solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "embedding": {
+      "fsType": 0,
+      "technicalPermission": "Installable",
+      "webStatus": "not-confirmed",
+      "integrationAllowed": true,
+      "note": "Habilitación solicitada solo para uso local personal; no constituye permiso de publicación web o redistribución. No se encontró prohibición web expresa en las notas disponibles. Confirmar con el autor antes de publicar.",
+      "integrationScope": "local-personal-only"
+    },
+    "archive": "fonts/homesweet/homesweet.zip",
+    "sha256": "21a592f7a61c1380c2ea21af60d6dc360d7243c955a1f4fefd3d0e79c170e9c4",
+    "archiveSha256": "9ea35d3da95439f4c5c1fab74c98640063684a3ab6c871f61f65695aa900cd4d",
+    "evidence": [
+      "fonts/homesweet/source.html",
+      "fonts/homesweet/source-text.txt"
+    ],
+    "licenseNote": "Prohíbe también uso promocional sin licencia.",
+    "missingSpanish": []
+  },
+  {
+    "id": "richard-samuels",
+    "name": "Richard Samuels",
+    "url": "fonts/richard-samuels/original/Richard%20Samuels.otf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.fontriver.com/font/richard_samuels/",
+    "downloadUrl": "https://www.fontriver.com/f/richard_samuels.zip",
+    "licenseLabel": "Solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "embedding": {
+      "fsType": 0,
+      "technicalPermission": "Installable",
+      "webStatus": "not-confirmed",
+      "integrationAllowed": true,
+      "note": "Habilitación solicitada solo para uso local personal; no constituye permiso de publicación web o redistribución. No se encontró prohibición web expresa en las notas disponibles. Confirmar con el autor antes de publicar.",
+      "integrationScope": "local-personal-only"
+    },
+    "archive": "fonts/richard-samuels/richard_samuels.zip",
+    "sha256": "115b5f2c87f59a071d9979370e3e720841aa9c2cd457ab00f92824f34bf7e41e",
+    "archiveSha256": "765b6fd1e4df182191563a4511d8dff3adc276c053d5f8081fea24e1c7bbddcc",
+    "evidence": [
+      "fonts/richard-samuels/source.html",
+      "fonts/richard-samuels/source-text.txt"
+    ],
+    "missingSpanish": []
+  },
+  {
+    "id": "super-cedar",
+    "name": "Super Cedar",
+    "url": "fonts/super-cedar/original/Super%20Cedar%20Personal%20Use.ttf",
+    "weight": 400,
+    "style": "normal",
+    "sourceUrl": "https://www.dafont.com/es/super-cedar.font",
+    "downloadUrl": "https://dl.dafont.com/dl/?f=super_cedar",
+    "licenseLabel": "Solo uso personal",
+    "spanishCoverage": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "embedding": {
+      "fsType": 4,
+      "technicalPermission": "Preview & Print only",
+      "webStatus": "not-confirmed",
+      "integrationAllowed": true,
+      "note": "Habilitación solicitada solo para uso local personal; no constituye permiso de publicación web o redistribución. No se encontró prohibición web expresa en las notas disponibles. Confirmar con el autor antes de publicar.",
+      "integrationScope": "local-personal-only"
+    },
+    "archive": "fonts/super-cedar/super-cedar.zip",
+    "sha256": "0de3b818413b41bc891f4c5ad6a71cd3d61d06d2dee21d669f7285bf4363bcee",
+    "archiveSha256": "4007f089c4c6c8895f8f8122aa34ff1f5473f69e73cbd71031d829ffb1d4414a",
+    "evidence": [
+      "fonts/super-cedar/source.html",
+      "fonts/super-cedar/source-text.txt",
+      "fonts/super-cedar/original/README, PLEASE.txt"
+    ],
+    "licenseNote": "El dominio comercial del README devolvió contenido de apuestas durante la inspección; no confiar en él.",
+    "missingSpanish": []
+  }
+];

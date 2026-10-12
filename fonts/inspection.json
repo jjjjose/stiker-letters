@@ -1,0 +1,196 @@
+[
+  {
+    "path": "fonts/baby-angella/original/BabyAngella-Regular.ttf",
+    "weight": 400,
+    "fsType": 8,
+    "names": [
+      [
+        1,
+        "Baby Angella"
+      ],
+      [
+        2,
+        "Regular"
+      ],
+      [
+        0,
+        "©Viola Type & Silverdav Studio"
+      ],
+      [
+        8,
+        "Viola Type & Silverdav Studio"
+      ],
+      [
+        9,
+        "Hasna - Viola Type"
+      ],
+      [
+        13,
+        "Demo Version"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "¿",
+      "complete": false
+    },
+    "unicodeCodepoints": 371
+  },
+  {
+    "path": "fonts/hello-farmer-2/original/hello farmer.otf",
+    "weight": 400,
+    "fsType": 0,
+    "names": [
+      [
+        0,
+        "Typeface © (AM Designs). 2022. All Rights Reserved"
+      ],
+      [
+        1,
+        "hello farmer"
+      ],
+      [
+        2,
+        "Regular"
+      ],
+      [
+        9,
+        "AM Designs"
+      ],
+      [
+        13,
+        "akmalmaulana863@gmail.com"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "unicodeCodepoints": 235
+  },
+  {
+    "path": "fonts/homesweet/original/Homesweet.otf",
+    "weight": 400,
+    "fsType": 0,
+    "names": [
+      [
+        0,
+        "mamabilqis574@gmail.com"
+      ],
+      [
+        1,
+        "Homesweet"
+      ],
+      [
+        2,
+        "Regular"
+      ],
+      [
+        9,
+        "Nur Edi Prayitno"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "unicodeCodepoints": 220
+  },
+  {
+    "path": "fonts/richard-samuels/original/Richard Samuels.otf",
+    "weight": 400,
+    "fsType": 0,
+    "names": [
+      [
+        0,
+        "©Storytype Studio 2021. All Rights Reserved"
+      ],
+      [
+        1,
+        "Richard Samuels"
+      ],
+      [
+        2,
+        "Regular"
+      ],
+      [
+        8,
+        "Storytype Studio"
+      ],
+      [
+        9,
+        "Heru Utama Putra"
+      ],
+      [
+        13,
+        "©Storytype Studio 2021. All Rights Reserved"
+      ],
+      [
+        14,
+        "https://letterena.com/product-category/storytype/"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "unicodeCodepoints": 372
+  },
+  {
+    "path": "fonts/roklin/original/Roklin.ttf",
+    "weight": 400,
+    "fsType": 4,
+    "names": [
+      [
+        0,
+        "Copyright © 2022 Sign Studio. All Right Reserved."
+      ],
+      [
+        1,
+        "Roklin"
+      ],
+      [
+        2,
+        "Regular"
+      ],
+      [
+        8,
+        "Sign Studio"
+      ],
+      [
+        9,
+        "Sugiyanto"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "unicodeCodepoints": 506
+  },
+  {
+    "path": "fonts/super-cedar/original/Super Cedar Personal Use.ttf",
+    "weight": 400,
+    "fsType": 4,
+    "names": [
+      [
+        1,
+        "Super Cedar"
+      ],
+      [
+        2,
+        "Regular"
+      ]
+    ],
+    "spanish": {
+      "tested": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÜÑáéíóúüñ¿¡",
+      "missing": "",
+      "complete": true
+    },
+    "unicodeCodepoints": 233
+  }
+]

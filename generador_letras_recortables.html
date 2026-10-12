@@ -1,221 +1,229 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Generador de letras recortables</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stickers · Letras recortables</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#f0f2f4;
-      --panel:#fff;
-      --surface:#f6f7f8;
-      --ink:#252a31;
-      --muted:#626b76;
-      --border:#dce1e6;
-      --accent:#343d48;
-      --guide:rgba(100,110,120,.4);
-    }
+    :root{--bg:#f0f2f4;--panel:#fff;--surface:#f5f6f8;--ink:#252a31;--muted:#606b78;--border:#dce1e6;--accent:#35495a;--guide:rgba(100,110,120,.4);--page-width:279.4mm;--page-height:215.9mm;--gap:5px;--radius:5px;--control:26px}
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    button,input,textarea{font:inherit}
-    .app{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh}
-    .controls{position:sticky;top:0;height:100vh;overflow:auto;background:var(--panel);border-right:1px solid var(--border);padding:20px;z-index:5;color-scheme:light}
-    .controls h1{font-size:18px;line-height:1.3;margin-bottom:6px}
-    .controls .subtitle{font-size:12px;line-height:1.45;margin-bottom:16px}
-    .controls .field{margin-bottom:16px}
-    .controls .field label{gap:8px;font-size:12px;margin-bottom:6px}
-    .controls .field small{font-size:10px;text-align:right}
-    .controls textarea{display:block;min-height:120px;padding:10px 12px;border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px}
-    .controls .height-row{grid-template-columns:minmax(0,1fr) 72px;gap:10px}
-    .controls input[type="range"]{margin:0;accent-color:var(--accent)}
-    .controls .spacing-value{padding:7px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
-    .controls .spacing-hint{display:flex;justify-content:space-between;margin-top:6px;color:var(--muted);font-size:10px}
-    .controls input[type="number"]{padding:7px 8px;border-radius:8px;background:var(--surface);color:var(--ink);text-align:center;font-size:13px}
-    .controls .field .checkrow{justify-content:flex-start;gap:8px;margin:0;min-height:28px;font-weight:500;line-height:1.4}
-    .controls .checkrow input{flex:none;margin:0;accent-color:var(--accent)}
-    .controls .stats{margin-top:0;gap:8px}
-    .controls .stat{min-width:0;padding:9px 10px;border-radius:8px;background:var(--surface)}
-    .controls .stat b{font-size:16px;line-height:1.3;font-variant-numeric:tabular-nums}
-    .controls .stat span{display:block;font-size:10px;line-height:1.4}
-    .controls .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-    .controls .btn{padding:9px 10px;border-radius:8px;font-size:12px;color:var(--ink);background:var(--surface)}
-    .controls .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
-    .controls .note{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:10px;line-height:1.5}
-    .controls :is(textarea,input[type="number"]):focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(52,61,72,.1)}
-    .controls :is(button,input):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-    h1{font-size:20px;line-height:1.2;margin:0 0 8px}
-    .subtitle{font-size:13px;line-height:1.5;color:var(--muted);margin-bottom:22px}
-    .field{margin-bottom:20px}
-    .field label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:700;margin-bottom:8px}
-    .field small{color:var(--muted);font-weight:500}
-    textarea{width:100%;min-height:230px;resize:vertical;border:1px solid var(--border);border-radius:12px;padding:13px 14px;outline:none;line-height:1.45;background:#fff;transition:border-color .15s,box-shadow .15s}
-    textarea:focus,input[type="number"]:focus{border-color:#a7afb9;box-shadow:0 0 0 3px rgba(20,25,32,.06)}
-    .height-row{display:grid;grid-template-columns:1fr 86px;gap:12px;align-items:center}
-    input[type="range"]{width:100%;accent-color:#161a20}
-    input[type="number"]{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px 9px;outline:none}
-    .checkrow{display:flex;gap:10px;align-items:center;font-size:13px;margin:10px 0}
-    .checkrow input{width:16px;height:16px;accent-color:#15181d}
-    .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
-    .stat{border:1px solid var(--border);border-radius:11px;padding:11px 12px;background:#fafbfc}
-    .stat b{display:block;font-size:17px;margin-bottom:2px}
-    .stat span{font-size:11px;color:var(--muted)}
-    .actions{display:flex;gap:9px;margin-top:14px}
-    .btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:700;font-size:13px}
-    .btn.primary{background:#111318;color:#fff;border-color:#111318;flex:1}
-    .btn:hover{filter:brightness(.97)}
-    .note{margin-top:14px;font-size:11px;line-height:1.5;color:var(--muted)}
-    .warning{display:none;margin-top:12px;padding:10px 11px;border:1px solid #e2b7b7;background:#fff7f7;border-radius:9px;color:#8f2e2e;font-size:12px;line-height:1.4}
+    [hidden]{display:none!important}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:12px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit;color:inherit}
+    button,select{cursor:pointer}
+    button,input:not([type=range]):not([type=checkbox]),select,textarea{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}
+    button,input:not([type=range]):not([type=checkbox]),select{min-height:var(--control);padding:3px 6px}
+    button:disabled{cursor:wait;opacity:.55}
+    button:hover:not(:disabled){background:#e9edf1}
+    :is(button,input,select,textarea,summary):focus-visible{outline:2px solid #537da0;outline-offset:2px}
+    input[type=range]{width:100%;min-width:0;margin:0;accent-color:var(--accent)}
+    input[type=checkbox]{margin:0;accent-color:var(--accent);width:14px;height:14px;flex:none}
+    input,select{min-width:0;max-width:100%}
+    .icon{width:15px;height:15px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}
+    .toolbar{position:sticky;top:0;z-index:20;min-height:42px;display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--panel);border-bottom:1px solid var(--border)}
+    h1{font-size:14px;line-height:1.2;margin:0;font-weight:750;display:flex;gap:6px;align-items:center}
+    .toolbar button{display:inline-flex;align-items:center;justify-content:center;gap:5px}
+    .toolbar .summary{flex:1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .primary{background:var(--accent)!important;color:white;border-color:var(--accent)!important}
+    .app{display:grid;grid-template-columns:minmax(0,1fr);align-items:start}
+    .controls{background:var(--panel);padding:10px;border-bottom:1px solid var(--border);max-height:50vh;overflow:auto;scrollbar-gutter:stable}
+    .config-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:10px;max-width:1600px;margin:auto}
+    .config-section{min-width:0}
+    .section-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:750;display:flex;align-items:center;gap:5px;margin:0 0 8px;color:var(--muted)}
+    .field{margin:0 0 8px;min-width:0}
+    .field>label,.field-label{display:flex;align-items:center;gap:5px;font-weight:600;margin-bottom:3px;min-height:17px}
+    .field>label small{margin-left:auto;color:var(--muted);font-size:11px;font-weight:400}
+    .field :is(select,textarea),.full{width:100%}
+    textarea{display:block;width:100%;min-height:60px;height:60px;resize:vertical;padding:5px 6px;line-height:1.45}
+    .row{display:flex;align-items:center;gap:5px;min-width:0}
+    .row>*{min-width:0}
+    .row>.grow{flex:1}
+    .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px}
+    .measure-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 22px;gap:5px;align-items:center}
+    .measure-row input[type=text]{width:62px;text-align:right;font-variant-numeric:tabular-nums}
+    .measure-row output{height:26px;display:flex;align-items:center;justify-content:flex-end;padding:3px 6px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);font-variant-numeric:tabular-nums}
+    .unit,.muted{color:var(--muted);font-size:11px}
+    .checkrow{display:flex;align-items:center;gap:5px;min-height:24px;font-weight:400!important;margin:0}
+    details{margin:5px 0}
+    summary{cursor:pointer;color:var(--muted);font-size:11px;min-height:22px;line-height:22px}
+    .help{color:var(--muted);font-size:11px;line-height:1.5;margin:5px 0}
+    .help a,.status a{color:#325e80}
+    .status{font-size:11px;margin:4px 0;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
+    .status.error,[aria-invalid=true]{color:#9b3030;border-color:#c87878!important}
+    .warning{display:none;border:1px solid #e2b7b7;background:#fff7f7;border-radius:5px;padding:5px 8px;color:#8f2e2e;font-size:11px;margin:5px 0}
     .warning.show{display:block}
-    .preview-shell{padding:26px;overflow:auto;min-width:0}
-    .preview-head{display:flex;justify-content:space-between;align-items:center;gap:15px;max-width:1200px;margin:0 auto 16px;color:var(--muted);font-size:12px}
-    .pages{display:flex;flex-direction:column;align-items:center;gap:24px}
+    .stats{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px;border-top:1px solid var(--border);padding-top:6px;margin-top:4px}
+    .stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+    .stats .grow{flex:1}
+    .font-trigger{display:flex;align-items:center;gap:6px;justify-content:space-between;width:100%;height:28px;text-align:left}
+    #selectedFontPreview{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;line-height:1.2}
+    #selectedFontName{display:none}
+    .font-popup{position:fixed;z-index:40;width:340px;max-width:calc(100vw - 16px);border:1px solid #b8c2ce;border-radius:7px;background:white;box-shadow:0 10px 30px #152c4326;padding:6px}
+    .font-popup input{width:100%}
+    .font-list{max-height:310px;overflow:auto;margin-top:5px;scrollbar-gutter:stable}
+    .font-option{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 5px;padding:5px 6px;border-radius:4px;cursor:pointer;border:1px solid transparent;min-height:48px}
+    .font-option.active{border-color:#537da0;background:#f1f6fa}
+    .font-option[aria-selected=true]{background:#e8eef4}
+    .font-option:hover{background:#f0f3f7}
+    .font-option .font-name{font-size:11px;font-weight:650}
+    .font-option .badge{font-size:10px;color:var(--muted);align-self:center}
+    .font-option .font-sample{grid-column:1/-1;font-size:21px;line-height:1.3;min-height:27px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+    .font-option .font-sample.pending{font:11px/27px system-ui;color:var(--muted)}
+    .font-group{font-size:10px;letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--muted);padding:7px 6px 3px}
+    .preview-shell{padding:14px;min-width:0;overflow:auto}
+    .preview-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;max-width:1400px;margin:0 auto 10px;font-size:11px;color:var(--muted)}
+    .pages{display:flex;flex-direction:column;align-items:center;gap:18px}
     .page-wrap{position:relative;flex:none}
-    .page{width:27.94cm;height:21.59cm;background:#fff;position:absolute;left:0;top:0;transform-origin:top left;box-shadow:0 12px 34px rgba(20,25,31,.15),0 2px 5px rgba(20,25,31,.08);overflow:hidden}
-    .page-guides{position:absolute;inset:0;pointer-events:none;z-index:0;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--guide-step) - .25mm),var(--guide) calc(var(--guide-step) - .25mm),var(--guide) var(--guide-step));background-size:100% var(--guide-step)}
+    .page{width:var(--page-width);height:var(--page-height);background:white;position:absolute;left:0;top:0;transform-origin:top left;box-shadow:0 4px 20px #202c3c26;overflow:hidden}
+    .page-guides{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--guide-step) - .25mm),var(--guide) calc(var(--guide-step) - .25mm),var(--guide) var(--guide-step));background-size:100% var(--guide-step)}
     .page.no-guides .page-guides{display:none}
-    .page-number{position:absolute;right:.38cm;bottom:.24cm;font:500 10px/1.2 ui-sans-serif,system-ui,sans-serif;color:#b3b8be;z-index:4}
-    .sheet-content{position:absolute;inset:0 .62cm;overflow:hidden;z-index:1}
-    .line{display:flex;align-items:center;flex-wrap:nowrap;gap:var(--word-gap,.44cm);width:100%;position:absolute;left:0;white-space:nowrap}
+    .page-number{position:absolute;right:.38cm;bottom:.24cm;font:10px/1.2 system-ui;color:#b3b8be;z-index:4}
+    .sheet-content{position:absolute;inset:0 var(--page-margin,6.2mm);overflow:hidden;z-index:1}
+    .line{display:flex;align-items:center;flex-wrap:nowrap;gap:0;width:100%;position:absolute;left:0;white-space:nowrap}
     .sticker{display:block;flex:none;overflow:visible}
-    .oversize-marker{outline:1px solid rgba(190,35,35,.22);outline-offset:2px}
-    @media(max-width:900px){.app{grid-template-columns:1fr}.controls{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border)}.preview-shell{padding:18px 10px 28px}}
-    @media print{
-      @page{size:letter landscape;margin:0}
-      body{background:#fff}
-      .controls,.preview-head{display:none!important}
-      .app{display:block}
-      .preview-shell{padding:0;overflow:visible}
-      .pages{display:block}
-      .page-wrap{width:27.94cm!important;height:21.59cm!important;margin:0!important;break-after:page;page-break-after:always}
-      .page{position:relative!important;transform:none!important;box-shadow:none!important;width:27.94cm!important;height:21.59cm!important}
-      .page-number{display:none}
-      .page:not(.print-guides) .page-guides{display:none!important}
-      *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    }
+    .oversize-marker{outline:1px solid #be232338;outline-offset:2px}
+    body[data-panel=side] .app{grid-template-columns:280px minmax(0,1fr)}
+    body[data-panel=side] .controls{position:sticky;top:42px;max-height:calc(100vh - 42px);border-right:1px solid var(--border)}
+    body[data-panel=side] .config-grid{grid-template-columns:1fr}
+    body[data-panel=side] .stats{gap:6px}
+    body.config-closed .app{grid-template-columns:minmax(0,1fr)}
+    @media(max-width:1100px) and (min-width:701px){body:not([data-panel=side]) .config-grid{grid-template-columns:1fr 1fr}.config-section:last-child{grid-column:1/-1}body[data-panel=side] .config-section:last-child{grid-column:auto}}
+    @media(max-width:700px){.toolbar{flex-wrap:wrap;gap:5px}.toolbar h1{font-size:13px}.toolbar .summary{display:none}.toolbar #printBtn{margin-left:auto}.toolbar .location-label{display:none}.app,body[data-panel=side] .app{grid-template-columns:minmax(0,1fr)}.config-grid{grid-template-columns:1fr}.controls,body[data-panel=side] .controls{position:static;max-height:50vh;border-right:0}.preview-shell{padding:10px 5px}.toolbar #panelLocation{display:none}}
+    @media(pointer:coarse){:root{--control:36px}.font-trigger{height:36px}.checkrow{min-height:36px}.font-option{min-height:56px}input[type=range]{min-height:32px}.measure-row output{height:36px}}
+    @media print{@page{size:279.4mm 215.9mm;margin:0}body{background:white}.toolbar,.controls,.preview-head,.font-popup{display:none!important}.app,body[data-panel=side] .app{display:block}.preview-shell{padding:0;overflow:visible}.pages{display:block}.page-wrap{width:var(--page-width)!important;height:var(--page-height)!important;margin:0!important;break-after:page}.page-wrap:last-child{break-after:auto}.page{position:relative!important;transform:none!important;box-shadow:none!important;width:var(--page-width)!important;height:var(--page-height)!important}.page-number{display:none}.page:not(.print-guides) .page-guides{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
   </style>
+  <style id="paperPrintStyle">@page{size:279.4mm 215.9mm;margin:0}</style>
 </head>
-<body>
+<body data-panel="top">
+  <header class="toolbar">
+    <h1><svg class="icon" data-icon="sticker" aria-hidden="true"></svg> Letras · stickers</h1>
+    <button id="configToggle" aria-expanded="true" aria-controls="configPanel"><svg class="icon" data-icon="settings" aria-hidden="true"></svg>Configuración</button>
+    <label for="panelLocation" class="unit location-label">Panel</label>
+    <select id="panelLocation" aria-label="Ubicación de configuración"><option value="top">Arriba</option><option value="side">Lateral</option></select>
+    <span id="configSummary" class="summary">Fredoka · Carta horizontal</span>
+    <button class="primary" id="printBtn" type="button"><svg class="icon" data-icon="print" aria-hidden="true"></svg>Imprimir / PDF</button>
+  </header>
   <div class="app">
-    <aside class="controls">
-      <h1>Generador de letras recortables</h1>
-      <div class="subtitle">Cada palabra se convierte en un sticker independiente. Todas las palabras conservan exactamente la misma escala tipográfica.</div>
-
-      <div class="field">
-        <label for="textInput">Texto <small>actualización en tiempo real</small></label>
-        <textarea id="textInput" spellcheck="false">hola como estan</textarea>
+    <aside class="controls" id="configPanel" aria-label="Configuración del documento">
+      <div class="config-grid">
+        <section class="config-section">
+          <h2 class="section-title"><svg class="icon" data-icon="text" aria-hidden="true"></svg>Texto y tipografía</h2>
+          <div class="field"><label for="textInput">Texto <small>un sticker por palabra</small></label><textarea id="textInput" spellcheck="false">hola como estan</textarea></div>
+          <label class="checkrow"><input id="cleanWhitespaceToggle" type="checkbox" checked>Limpiar espacios y saltos sobrantes</label>
+          <div class="two">
+            <div class="field"><label id="fontLabel">Fuente</label><button id="fontSelect" class="font-trigger" type="button" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="fontList" aria-labelledby="fontLabel selectedFontName"><span id="selectedFontPreview">Fredoka</span><span id="selectedFontName">Fredoka</span><svg class="icon" data-icon="chevron" aria-hidden="true"></svg></button></div>
+            <div class="field"><label for="variantSelect">Variante</label><select id="variantSelect"><option value="normal:700">Bold · 700</option></select></div>
+          </div>
+          <div id="fontStatus" class="status" role="status" aria-live="polite"></div>
+          <div id="fontLicense" class="status"></div>
+          <details><summary>＋ Cargar desde Google Fonts</summary><label for="fontUrl" class="field-label">URL de página o CSS</label><div class="row"><input id="fontUrl" class="grow" type="url" placeholder="https://fonts.google.com/specimen/…"><button id="loadFontBtn" type="button"><svg class="icon" data-icon="download" aria-hidden="true"></svg> Cargar</button></div><p class="help">Página de familia o enlace fonts.googleapis.com. Requiere internet.</p><div id="importStatus" class="status" role="status"></div></details>
+        </section>
+        <section class="config-section">
+          <h2 class="section-title"><svg class="icon" data-icon="paper" aria-hidden="true"></svg>Hoja y medidas</h2>
+          <div class="field"><label for="paperSelect">Formato</label><select id="paperSelect"></select></div>
+          <div class="two">
+            <div class="field"><label for="orientationSelect">Orientación</label><select id="orientationSelect"><option value="landscape">Horizontal</option><option value="portrait">Vertical</option></select></div>
+            <div class="field"><label for="unitSelect">Unidad</label><select id="unitSelect"><option value="cm">Centímetros · cm</option><option value="mm">Milímetros · mm</option></select></div>
+          </div>
+          <div class="field"><div class="row"><label class="grow" for="paperWidth">Ancho <span class="unit" data-unit>cm</span></label><label class="grow" for="paperHeight">Alto <span class="unit" data-unit>cm</span></label><span style="width:26px"></span></div><div class="row"><input id="paperWidth" class="grow" type="text" inputmode="decimal" aria-describedby="paperError" readonly><input id="paperHeight" class="grow" type="text" inputmode="decimal" aria-describedby="paperError" readonly><button id="swapPaper" type="button" aria-label="Intercambiar ancho y alto" title="Intercambiar ancho y alto"><svg class="icon" data-icon="swap" aria-hidden="true"></svg></button></div></div>
+          <div class="field">
+            <div class="row"><label class="grow" for="marginSlider" style="margin:0">Margen lateral <small>defecto: 0,62 cm · 6,2 mm</small></label><button id="zeroMarginBtn" type="button" class="unit" style="border:none;background:none;padding:0;cursor:pointer;text-decoration:underline" title="Quitar márgenes">Sin margen (0)</button></div>
+            <div class="measure-row" style="margin-top:3px"><input id="marginSlider" type="range" min="0" max="50" step="0.1" value="6.2"><input id="marginNumber" type="text" inputmode="decimal" value="0,62" aria-label="Margen lateral de la hoja"><span class="unit" data-unit>cm</span></div>
+          </div>
+          <div id="paperError" class="status error" role="alert"></div><div id="paperNotice" class="status" role="status"></div>
+          <label class="checkrow"><input id="guidesToggle" type="checkbox" checked>Mostrar divisiones</label><label class="checkrow"><input id="printGuidesToggle" type="checkbox">Imprimir divisiones</label>
+          <details><summary>Medidas y consejos de impresión</summary><p class="help">Cada franja incluye letras y borde. Imprime al 100 % con el mismo papel. El margen lateral por defecto es 0,62 cm (6,2 mm); puedes reducirlo a 0 para aprovechar todo el ancho. Oficio tiene variantes regionales; verifica las dimensiones. Los tamaños personalizados van de 20 a 2000 mm por lado. La impresora debe admitir el formato.</p></details>
+        </section>
+        <section class="config-section">
+          <h2 class="section-title"><svg class="icon" data-icon="spacing" aria-hidden="true"></svg>Sticker y espaciado</h2>
+          <div class="field"><label for="heightSlider">Altura de franja</label><div class="measure-row"><input id="heightSlider" type="range" min="2.5" max="200" step="0.1" value="30"><input id="heightNumber" type="text" inputmode="decimal" value="3" aria-label="Altura de franja"><span class="unit" data-unit>cm</span></div></div>
+          <div class="field"><label for="borderSlider">Borde blanco <small>de la franja</small></label><div class="measure-row"><input id="borderSlider" type="range" min="1" max="20" step="0.5" value="7.5"><output id="borderValue" for="borderSlider">7,5</output><span class="unit">%</span></div></div>
+          <div class="field"><label for="letterSpacingSlider">Entre letras <small>de la fuente</small></label><div class="measure-row"><input id="letterSpacingSlider" type="range" min="-10" max="30" step="1" value="0"><output id="letterSpacingValue" for="letterSpacingSlider">0</output><span class="unit">%</span></div></div>
+          <div class="field"><label for="wordGapSlider">Entre palabras <small>-10 a +10 cm</small></label><div class="measure-row"><input id="wordGapSlider" type="range" min="-100" max="100" step="0.1" value="4.4"><input id="wordGapNumber" type="text" inputmode="decimal" value="0,44" aria-label="Separación entre palabras"><span class="unit" data-unit>cm</span></div></div>
+          <div id="measureError" class="status error" role="alert"></div>
+          <details><summary>Cómo se calcula el sticker</summary><p class="help">La altura se calibra con una referencia fija: añadir palabras no cambia la escala. El borde blanco se une en una silueta continua, sin cortes internos. La separación entre palabras admite valores negativos (hasta -10 cm) para compactar o solapar palabras consecutivas. Al desactivar la limpieza se respetan espacios y líneas vacías; una tabulación equivale a cuatro espacios. El borde conserva una holgura mínima de seguridad.</p><p class="help">Fuentes finas y detalles pequeños pueden perderse al imprimir. Las demos personales no autorizan uso comercial. No se exportan curvas de texto para plotter.</p></details>
+        </section>
       </div>
-
-      <div class="field">
-        <label>Altura de franja <small>incluye el contorno · 0,25–20 cm</small></label>
-        <div class="height-row">
-          <input id="heightSlider" type="range" min="0.25" max="20" step="0.01" value="3">
-          <input id="heightNumber" type="number" min="0.25" max="20" step="0.01" value="3">
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="letterSpacingSlider">Separación entre letras <small>% de la fuente</small></label>
-        <div class="height-row">
-          <input id="letterSpacingSlider" type="range" min="-10" max="30" step="1" value="0" aria-describedby="letterSpacingHint" aria-valuetext="0 % · separación original">
-          <output id="letterSpacingValue" class="spacing-value" for="letterSpacingSlider">0 %</output>
-        </div>
-        <div id="letterSpacingHint" class="spacing-hint"><span>Más juntas</span><span>Más separadas</span></div>
-      </div>
-
-      <div class="field">
-        <label>Vista y corte</label>
-        <label class="checkrow"><input id="guidesToggle" type="checkbox" checked> Mostrar líneas de división</label>
-        <label class="checkrow"><input id="printGuidesToggle" type="checkbox"> Imprimir también las divisiones</label>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><b id="pageCount">1</b><span>hojas Carta</span></div>
-        <div class="stat"><b id="guideCount">7</b><span>franjas completas por hoja</span></div>
-      </div>
-      <div class="stats" style="margin-top:8px">
-        <div class="stat"><b id="wordCount">0</b><span>palabras</span></div>
-        <div class="stat"><b id="physicalInfo">3,0 cm</b><span>altura de franja</span></div>
-      </div>
-
-      <div id="warning" class="warning"></div>
-
-      <div class="actions">
-        <button class="btn" id="clearBtn" type="button">Limpiar</button>
-        <button class="btn primary" id="printBtn" type="button">Imprimir / PDF</button>
-      </div>
-
-      <div class="note">
-        Las líneas horizontales se dividen usando exactamente la altura elegida. Por ejemplo, a <b>3 cm</b>, una hoja Carta de <b>21,59 cm</b> muestra <b>7 franjas completas</b> de 3 cm y un resto de 0,59 cm. El tamaño de las letras se calibra con una referencia fija que incluye mayúsculas, tildes y descendentes como p, j y g, contando el contorno real sin reservar el espacio invisible de la fuente. Añadir o quitar letras no cambia la escala. Se deja una pequeña holgura de seguridad dentro de cada franja y se mantiene la misma línea base en todas las filas. La separación entre letras es proporcional al tamaño de la fuente: <b>0 %</b> conserva la original, los valores negativos las juntan y los positivos las separan, sin cambiar el espacio entre palabras. Cada palabra tiene una silueta blanca continua que sigue las letras, con entradas redondeadas entre ellas y una línea exterior gris fina, sin cortes en los huecos interiores. La tipografía redondeada aproxima el estilo de la referencia.
-      </div>
+      <div class="stats"><span><b id="pageCount">1</b> <span id="paperCountLabel">hojas Carta</span></span><span><b id="guideCount">7</b> franjas/hoja</span><span><b id="wordCount">3</b> palabras</span><span><b id="physicalInfo">3 cm</b> de alto</span><span class="grow"></span><button id="clearBtn" type="button"><svg class="icon" data-icon="clear" aria-hidden="true"></svg> Limpiar texto</button></div>
+      <div id="warning" class="warning" role="status"></div>
     </aside>
-
-    <main class="preview-shell">
-      <div class="preview-head">
-        <span>Previsualización · Carta horizontal 27,94 × 21,59 cm</span>
-        <span id="fontInfo">Altura mayúscula: 3,0 cm</span>
-      </div>
-      <div id="pages" class="pages"></div>
-    </main>
+    <main class="preview-shell"><div class="preview-head"><span id="paperInfo">Carta horizontal</span><span id="fontInfo"></span></div><div id="pages" class="pages"></div></main>
   </div>
-
+  <div id="fontPopup" class="font-popup" hidden><input id="fontSearch" type="search" placeholder="Buscar fuente o categoría…" role="combobox" aria-label="Buscar fuente" aria-autocomplete="list" aria-expanded="true" aria-controls="fontList"><div id="fontList" class="font-list" role="listbox" aria-label="Catálogo de fuentes"></div><div id="fontResults" class="status" role="status"></div></div>
   <canvas id="measureCanvas" width="1" height="1" hidden></canvas>
-
+  <script src="fonts/catalog.js"></script>
   <script>
     (() => {
+      const $ = id => document.getElementById(id);
       const CM_TO_PX = 96 / 2.54;
-      const PAGE_W_CM = 27.94;
-      const PAGE_H_CM = 21.59;
-      const PAGE_PAD_CM = 0.62;
-      const CONTENT_W_PX = (PAGE_W_CM - PAGE_PAD_CM * 2) * CM_TO_PX;
-      const CONTENT_H_PX = PAGE_H_CM * CM_TO_PX;
-      const WORD_GAP_CM = 0.44;
-      const WORD_GAP_PX = WORD_GAP_CM * CM_TO_PX;
-
-      const textInput = document.getElementById('textInput');
-      const heightSlider = document.getElementById('heightSlider');
-      const heightNumber = document.getElementById('heightNumber');
-      const letterSpacingSlider = document.getElementById('letterSpacingSlider');
-      const letterSpacingValue = document.getElementById('letterSpacingValue');
-      const guidesToggle = document.getElementById('guidesToggle');
-      const printGuidesToggle = document.getElementById('printGuidesToggle');
-      const pagesEl = document.getElementById('pages');
-      const pageCountEl = document.getElementById('pageCount');
-      const guideCountEl = document.getElementById('guideCount');
-      const wordCountEl = document.getElementById('wordCount');
-      const physicalInfoEl = document.getElementById('physicalInfo');
-      const warningEl = document.getElementById('warning');
-      const fontInfoEl = document.getElementById('fontInfo');
-      const printBtn = document.getElementById('printBtn');
-      const clearBtn = document.getElementById('clearBtn');
-      const canvas = document.getElementById('measureCanvas');
-      const ctx = canvas.getContext('2d');
-      const contourCanvas = document.createElement('canvas');
-      const contourCache = new Map();
-
-      let debounceTimer;
-      let currentFontPx = 120;
-      let currentLetterSpacing = 0;
-      let currentTargetCm = 3;
-      let stickerBorderPx = 7;
-      let cutLinePx = 1;
-      let rowHeightPx = 150;
-      let rowStepPx = 165;
-      let referenceAscent = 0;
-      let referenceDescent = 0;
-
-      function fontFamily(){
-        return '"Fredoka", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif';
+      const PAGE_PAD_CM = .62;
+      const REFERENCE = ['ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑ', 'abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡()'];
+      const PAPERS = {
+        letter:{name:'Carta',width:215.9,height:279.4,group:'América'},
+        legal:{name:'Legal',width:215.9,height:355.6,group:'América'},
+        oficio:{name:'Oficio',width:216,height:330,group:'América'},
+        oficio340:{name:'Oficio · 340 mm',width:216,height:340,group:'América'},
+        half:{name:'Media carta',width:139.7,height:215.9,group:'América'},
+        tabloid:{name:'Tabloide',width:279.4,height:431.8,group:'América'},
+        executive:{name:'Ejecutivo',width:184.15,height:266.7,group:'América'}
+      };
+      [[841,1189],[594,841],[420,594],[297,420],[210,297],[148,210],[105,148],[74,105],[52,74],[37,52],[26,37]].forEach(([width,height],i)=>PAPERS['a'+i]={name:'A'+i,width,height,group:'ISO · Serie A'});
+      let unit='cm', paperWidthMm=279.4, paperHeightMm=215.9, targetMm=30, gapMm=4.4, marginMm=6.2;
+      let customWidthMm=279.4, customHeightMm=215.9;
+      let PAGE_W_CM=27.94, PAGE_H_CM=21.59, CONTENT_W_PX=0, CONTENT_H_PX=0, WORD_GAP_PX=0;
+      let invalidPaper=false, invalidMeasure=false, selectionBusy=false;
+      const textInput=$('textInput'), heightSlider=$('heightSlider'), heightNumber=$('heightNumber');
+      const letterSpacingSlider=$('letterSpacingSlider'), letterSpacingValue=$('letterSpacingValue');
+      const borderSlider=$('borderSlider'), borderValue=$('borderValue'), wordGapSlider=$('wordGapSlider'), marginSlider=$('marginSlider'), marginNumber=$('marginNumber');
+      const fontSelect=$('fontSelect'), paperSelect=$('paperSelect'), variantSelect=$('variantSelect');
+      const cleanWhitespaceToggle=$('cleanWhitespaceToggle'), guidesToggle=$('guidesToggle'), printGuidesToggle=$('printGuidesToggle');
+      const pagesEl=$('pages'), pageCountEl=$('pageCount'), guideCountEl=$('guideCount'), wordCountEl=$('wordCount');
+      const physicalInfoEl=$('physicalInfo'), warningEl=$('warning'), fontInfoEl=$('fontInfo');
+      const paperInfo=$('paperInfo'), paperCountLabel=$('paperCountLabel'), paperPrintStyle=$('paperPrintStyle');
+      const printBtn=$('printBtn'), clearBtn=$('clearBtn');
+      const ctx=$('measureCanvas').getContext('2d'), contourCanvas=document.createElement('canvas'), contourCache=new Map();
+      let debounceTimer, currentFontPx=120, currentLetterSpacing=0, currentTargetCm=3;
+      let stickerBorderPx=7, cutLinePx=1, rowHeightPx=150, rowStepPx=150, referenceAscent=0, referenceDescent=0;
+      let activeFont='fredoka', activeVariant={weight:700,style:'normal'}, selectedFont='fredoka';
+      let fontRequest=0, fontReady=Promise.resolve();
+      const FONTS=new Map();
+      const standardVariants=[{weight:400,style:'normal'},{weight:700,style:'normal'},{weight:400,style:'italic'},{weight:700,style:'italic'}];
+      function addGoogle(name,group){
+        const id=name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+        if(!FONTS.has(id))FONTS.set(id,{id,name,group,kind:'google',family:`Sticker-${id}`,faces:[],variants:[],sourceUrl:'https://fonts.google.com/specimen/'+encodeURIComponent(name),licenseLabel:'Google Fonts · consultar licencia'});
+        return FONTS.get(id);
       }
-
+      addGoogle('Fredoka','Predeterminada');
+      const principalNames=['Hello Farmer','Baby Angella','Roklin','Homesweet','Richard Samuels','Super Cedar'];
+      const principalSources=['https://www.dafont.com/es/hello-farmer-2.font','https://www.dafont.com/es/baby-angella.font','https://www.dafont.com/es/roklin.font','https://www.dafont.com/es/homesweet.font','https://www.fontriver.com/font/richard_samuels/','https://www.dafont.com/es/super-cedar.font'];
+      principalNames.forEach((name,i)=>{
+        const id=name.toLowerCase().replaceAll(' ','-');
+        FONTS.set(id,{id,name,group:'Principales',kind:'local',family:`Sticker-${id}`,url:`fonts/${id}/font.${[0,3,4].includes(i)?'otf':'ttf'}`,sourceUrl:principalSources[i],licenseLabel:'Uso personal / demo',faces:[],variants:[{weight:400,style:'normal'}]});
+      });
+      for(const entry of FONTS.values())if(entry.kind==='local'){
+        const local=(window.LOCAL_FONT_CATALOG||[]).find(f=>f.name===entry.name);
+        if(local){
+          entry.url=local.url;entry.sourceUrl=local.sourceUrl;entry.licenseLabel=local.licenseLabel;
+          entry.missingSpanish=local.missingSpanish;
+          if(!local.embedding.integrationAllowed)entry.blockedReason=local.embedding.note;
+        }else entry.blockedReason='No se encontró el catálogo local. Conserva la carpeta fonts junto al HTML.';
+      }
+      ['DynaPuff','Chewy','Lilita One','Coiny','Bagel Fat One','Grandstander','Modak'].forEach(n=>addGoogle(n,'Gruesas y divertidas'));
+      ['Berkshire Swash','Shrikhand','Lobster','Leckerli One','Bree Serif'].forEach(n=>addGoogle(n,'Elegantes y retro'));
+      ['Londrina Outline','Bungee Outline','Rubik Bubbles','Bubblegum Sans','Amatic SC','Londrina Solid','Patua One','Concert One'].forEach(n=>addGoogle(n,'Contorno y dibujo'));
+      ['Arial','Trebuchet MS','Verdana','Georgia','Courier New'].forEach(name=>{
+        const id='system-'+name.toLowerCase().replaceAll(' ','-');FONTS.set(id,{id,name,group:'Del sistema',kind:'system',family:name,variants:standardVariants,faces:[],licenseLabel:'Según instalación del equipo'});
+      });
+      function fontFamily(){return `"${FONTS.get(activeFont).family}", sans-serif`;}
+      function canvasFont(px){return `${activeVariant.style} ${activeVariant.weight} ${px}px ${fontFamily()}`;}
       function letterSpacingPx(px){
         return px * currentLetterSpacing / 100;
       }
 
       function setCanvasFont(px){
-        ctx.font = `700 ${px}px ${fontFamily()}`;
+        ctx.font = canvasFont(px);
         ctx.textBaseline = 'alphabetic';
         ctx.letterSpacing = `${letterSpacingPx(px)}px`;
       }
@@ -234,26 +242,28 @@
       }
 
       function tokenize(text){
-        const normalized = text.replace(/\r\n?/g, '\n');
-        const tokens = [];
-        normalized.split('\n').forEach((line, i, arr) => {
-          const words = line.trim().split(/\s+/).filter(Boolean);
-          words.forEach(w => tokens.push({type:'word', value:w}));
-          if (i < arr.length - 1) tokens.push({type:'newline'});
-        });
-        return tokens;
+        let normalized = text.replace(/\r\n?/g, '\n');
+        if (cleanWhitespaceToggle.checked){
+          normalized = normalized.split('\n').map(line => line.trim().replace(/[^\S\n]+/g, ' ')).filter(Boolean).join('\n');
+        } else {
+          normalized = normalized.replace(/\t/g, '    ');
+        }
+        return (normalized.match(/\n|[^\S\n]+|\S+/gu) || []).map(value => ({
+          type:value === '\n' ? 'newline' : /^\s+$/u.test(value) ? 'space' : 'word',
+          value
+        }));
       }
 
       function contourPath(word, box){
         if (contourCache.has(word)) return contourCache.get(word);
-        const scale = 3;
+        const scale = Math.min(3, 8192 / Math.max(box.width, box.height), Math.sqrt(2000000 / (box.width * box.height)));
         const width = Math.ceil(box.width * scale);
         const height = Math.ceil(box.height * scale);
         contourCanvas.width = width;
         contourCanvas.height = height;
         const c = contourCanvas.getContext('2d', {willReadFrequently:true});
         c.scale(scale, scale);
-        c.font = `700 ${currentFontPx}px ${fontFamily()}`;
+        c.font = canvasFont(currentFontPx);
         c.textBaseline = 'alphabetic';
         c.letterSpacing = `${letterSpacingPx(currentFontPx)}px`;
         c.lineJoin = 'round';
@@ -422,7 +432,9 @@
         text.setAttribute('fill','#000');
         text.setAttribute('font-size',currentFontPx);
         text.setAttribute('font-family',fontFamily());
-        text.setAttribute('font-weight','700');
+        text.setAttribute('font-weight',activeVariant.weight);
+        text.setAttribute('font-style',activeVariant.style);
+        text.style.fontSynthesis = 'none';
         text.setAttribute('letter-spacing',letterSpacingPx(currentFontPx));
         text.textContent = word;
 
@@ -455,7 +467,7 @@
 
         const content = document.createElement('div');
         content.className = 'sheet-content';
-        content.style.setProperty('--word-gap', `${WORD_GAP_CM}cm`);
+        content.style.setProperty('--word-gap', '0px');
 
         const num = document.createElement('div');
         num.className = 'page-number';
@@ -473,14 +485,15 @@
         line.className = 'line';
         line.style.top = `${y}px`;
         line.style.height = `${rowHeightPx}px`;
-        const metrics = lineWords.map(word => measureText(word));
+        const metrics = lineWords.map(item => measureText(item.word));
         const maxAscent = Math.max(referenceAscent, ...metrics.map(m => m.ascent));
         const maxDescent = Math.max(referenceDescent, ...metrics.map(m => m.descent));
         const outer = verticalPadding();
         const baseline = (rowHeightPx - maxAscent - maxDescent) / 2 + maxAscent;
         line.style.alignItems = 'flex-start';
-        lineWords.forEach((word, index) => {
+        lineWords.forEach(({word, gap}, index) => {
           const made = makeStickerSvg(word, oversizeWords.has(word));
+          made.svg.style.marginLeft = `${gap}px`;
           made.svg.style.marginTop = `${baseline - outer - metrics[index].ascent}px`;
           line.appendChild(made.svg);
         });
@@ -490,33 +503,37 @@
       function updateLetterSpacing(){
         currentLetterSpacing = Math.min(30, Math.max(-10, Number(letterSpacingSlider.value) || 0));
         const value = `${currentLetterSpacing > 0 ? '+' : ''}${currentLetterSpacing} %`;
-        letterSpacingValue.value = value;
+        letterSpacingValue.value = String(currentLetterSpacing);
         letterSpacingSlider.setAttribute('aria-valuetext', `${value} · ${currentLetterSpacing < 0 ? 'más juntas' : currentLetterSpacing > 0 ? 'más separadas' : 'separación original'}`);
       }
 
-      function clampHeight(value){
-        const parsed = parseFloat(value);
-        return Math.min(Number(heightNumber.max), Math.max(Number(heightNumber.min), Number.isNaN(parsed) ? 3 : parsed));
-      }
-
-      function formatHeight(value){
-        return value.toFixed(2).replace(/(\.\d)0$/, '$1');
-      }
-
+      function formatHeight(value){return Number(value.toFixed(2)).toLocaleString('es');}
+      function displayMeasure(mm){return Number((mm/(unit==='cm'?10:1)).toFixed(3)).toLocaleString('es',{maximumFractionDigits:3});}
+      function measureLabel(mm){return `${displayMeasure(mm)} ${unit}`;}
       function layout(){
-        const val = clampHeight(heightNumber.value);
-        updateLetterSpacing();
-        currentTargetCm = val;
-        heightSlider.value = val;
-        heightNumber.value = formatHeight(val);
-
+        clearTimeout(debounceTimer);
+        const paper=PAPERS[paperSelect.value] || {name:'Personalizado'};
+        PAGE_W_CM=paperWidthMm/10; PAGE_H_CM=paperHeightMm/10;
+        const marginCm=marginMm/10;
+        CONTENT_W_PX=Math.max(0,(PAGE_W_CM-marginCm*2)*CM_TO_PX);
+        CONTENT_H_PX=PAGE_H_CM*CM_TO_PX;
+        WORD_GAP_PX=gapMm/10*CM_TO_PX;
+        document.documentElement.style.setProperty('--page-width',`${paperWidthMm}mm`);
+        document.documentElement.style.setProperty('--page-height',`${paperHeightMm}mm`);
+        document.documentElement.style.setProperty('--page-margin',`${marginMm}mm`);
+        paperPrintStyle.textContent=`@page{size:${paperWidthMm}mm ${paperHeightMm}mm;margin:0}`;
+        paperInfo.textContent=`${paper.name} · ${measureLabel(paperWidthMm)} × ${measureLabel(paperHeightMm)} · margen ${marginMm===0?'0':measureLabel(marginMm)} · ${paperWidthMm>=paperHeightMm?'horizontal':'vertical'}`;
+        paperCountLabel.textContent=`hojas ${paper.name}`;
+        const val=targetMm/10;
+        currentTargetCm=val;
+        updateLetterSpacing();updateSpacingOutputs();
         rowHeightPx = val * CM_TO_PX;
         rowStepPx = rowHeightPx;
-        stickerBorderPx = Math.max(2 * Math.min(1, val), rowHeightPx * .075);
+        stickerBorderPx = Math.max(2 * Math.min(1, val), rowHeightPx * Number(borderSlider.value) / 100);
         cutLinePx = Math.max(.6 * Math.min(1, val), rowHeightPx * .009);
         contourCache.clear();
 
-        const sampleWords = ['ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÜÑ', 'abcdefghijklmnopqrstuvwxyzáéíóúüñ¿¡()'];
+        const sampleWords = REFERENCE;
         const availableHeight = rowHeightPx - verticalPadding() * 2 - 1;
         let low = 0;
         let high = rowHeightPx * 4;
@@ -547,9 +564,10 @@
         const tokens = tokenize(textInput.value);
         const wordsOnly = tokens.filter(t=>t.type==='word');
         wordCountEl.textContent = wordsOnly.length;
-        guideCountEl.textContent = Math.floor(PAGE_H_CM / val);
-        physicalInfoEl.textContent = `${formatHeight(val).replace('.',',')} cm`;
-        fontInfoEl.textContent = `Altura de franja: ${formatHeight(val).replace('.',',')} cm · ${Math.floor(PAGE_H_CM/val)} franjas completas`;
+        guideCountEl.textContent = Math.floor((paperHeightMm + 1e-7) / targetMm);
+        physicalInfoEl.textContent = measureLabel(targetMm);
+        fontInfoEl.textContent = `${FONTS.get(activeFont).name} · ${variantLabel(activeVariant)} · franja ${measureLabel(targetMm)}`;
+        $('configSummary').textContent = `${FONTS.get(activeFont).name} · ${paper.name} · ${measureLabel(paperWidthMm)} × ${measureLabel(paperHeightMm)}`;
 
         const oversizeWords = new Set();
         let pageIndex = 0;
@@ -579,20 +597,31 @@
           }
         }
 
+        let pendingGap = 0;
         for (const token of tokens){
           if (token.type==='newline'){
-            flushLine(false);
+            flushLine(true);
+            pendingGap = 0;
+            continue;
+          }
+          if (token.type==='space'){
+            pendingGap = Math.min(CONTENT_W_PX, pendingGap + token.value.length * WORD_GAP_PX);
             continue;
           }
           const box = stickerBox(token.value);
           if (box.width > CONTENT_W_PX) oversizeWords.add(token.value);
-          const needed = lineWords.length ? WORD_GAP_PX + box.width : box.width;
-          if (lineWords.length && lineWidth + needed > CONTENT_W_PX){
+          if (lineWords.length && lineWidth + pendingGap + box.width > CONTENT_W_PX){
             flushLine(false);
+            pendingGap = 0;
           }
-          if (!lineWords.length) ensureVertical();
-          lineWords.push(token.value);
-          lineWidth += (lineWords.length>1 ? WORD_GAP_PX : 0) + box.width;
+          // Conservar sangrías hasta el espacio disponible, sin empujar la primera palabra fuera a la izquierda.
+          if (!lineWords.length){
+            ensureVertical();
+            pendingGap = Math.max(0, Math.min(pendingGap, Math.max(0, CONTENT_W_PX - box.width)));
+          }
+          lineWords.push({word:token.value, gap:pendingGap});
+          lineWidth = Math.max(0, lineWidth + pendingGap + box.width);
+          pendingGap = 0;
         }
         flushLine(false);
 
@@ -607,7 +636,7 @@
       }
 
       function scalePages(){
-        const available=Math.max(280,pagesEl.clientWidth-4);
+        const available=Math.max(1,pagesEl.clientWidth-4);
         const naturalW=PAGE_W_CM*CM_TO_PX;
         const naturalH=PAGE_H_CM*CM_TO_PX;
         const scale=Math.min(1,available/naturalW);
@@ -619,27 +648,352 @@
         });
       }
 
-      function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(layout,55)}
-      heightSlider.addEventListener('input',()=>{heightNumber.value=formatHeight(Number(heightSlider.value));scheduleLayout()});
-      heightNumber.addEventListener('input',()=>{heightSlider.value=clampHeight(heightNumber.value);scheduleLayout()});
-      letterSpacingSlider.addEventListener('input',()=>{updateLetterSpacing();scheduleLayout()});
-      textInput.addEventListener('input',scheduleLayout);
-      guidesToggle.addEventListener('change',layout);
-      printGuidesToggle.addEventListener('change',layout);
-      printBtn.addEventListener('click',()=>window.print());
-      clearBtn.addEventListener('click',()=>{textInput.value='';layout();textInput.focus()});
-      window.addEventListener('resize',scalePages);
-
-      async function boot(){
-        try{
-          if(document.fonts&&document.fonts.load){
-            await document.fonts.load('700 100px "Fredoka"');
-            await document.fonts.ready;
-          }
-        }catch(e){}
-        layout();
+      function updateSpacingOutputs(){
+        borderValue.value=Number(borderSlider.value).toLocaleString('es');
+        borderSlider.setAttribute('aria-valuetext',borderValue.value+' % de la franja');
+        heightSlider.setAttribute('aria-valuetext',measureLabel(targetMm));
+        marginSlider.setAttribute('aria-valuetext',marginMm===0?'Sin márgenes':measureLabel(marginMm));
+        wordGapSlider.setAttribute('aria-valuetext',measureLabel(gapMm));
       }
-      boot();
+      function updatePrintState(){printBtn.disabled=selectionBusy||invalidPaper||invalidMeasure;}
+      function setStatus(id,text,error=false){$(id).textContent=text;$(id).classList.toggle('error',error);}
+      const WEIGHT_NAMES={100:'Thin',200:'Extra light',300:'Light',400:'Normal',500:'Medium',600:'Semibold',700:'Bold',800:'Extra bold',900:'Black'};
+      const variantKey=v=>`${v.style}:${v.weight}`;
+      function variantLabel(v){return `${WEIGHT_NAMES[v.weight]||'Peso'} · ${v.weight}${v.style==='italic'?' · cursiva':v.style==='oblique'?' · oblicua':''}`;}
+      function chooseVariant(entry,wanted){return entry.variants.find(v=>variantKey(v)===wanted)||entry.variants.find(v=>v.style==='normal'&&v.weight===400)||[...entry.variants].sort((a,b)=>Math.abs(a.weight-400)-Math.abs(b.weight-400))[0];}
+      function syncVariants(entry,variant){
+        variantSelect.replaceChildren(...entry.variants.map(v=>{const o=new Option(variantLabel(v),variantKey(v));o.selected=variantKey(v)===variantKey(variant);return o;}));
+      }
+      function withTimeout(promise,ms=15000){
+        let timer;return Promise.race([promise,new Promise((_,reject)=>timer=setTimeout(()=>reject(new Error('Tiempo de espera agotado. Reintenta la carga.')),ms))]).finally(()=>clearTimeout(timer));
+      }
+      async function fetchCss(url){
+        const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+        try{const response=await fetch(url,{signal:controller.signal,credentials:'omit',redirect:'error'});if(!response.ok)throw new Error('La fuente o las variantes solicitadas no están disponibles.');return await response.text();}
+        finally{clearTimeout(timer);}
+      }
+      function googleUrl(name){
+        const weights=Array.from({length:9},(_,i)=>(i+1)*100);
+        const url=new URL('https://fonts.googleapis.com/css');
+        url.searchParams.set('family',name+':'+[...weights,...weights.map(w=>w+'i')].join(','));url.searchParams.set('display','swap');return url.href;
+      }
+      function cssFontFaces(css){
+        const sheet=new CSSStyleSheet();sheet.replaceSync(css);
+        const faces=[];
+        for(const rule of sheet.cssRules){
+          if(rule.type!==CSSRule.FONT_FACE_RULE)continue;
+          const st=rule.style;
+          const name=st.getPropertyValue('font-family').trim().replace(/^['"]|['"]$/g,'');
+          const src=st.getPropertyValue('src');
+          const match=src.match(/url\(\s*['"]?([^'"\s)]+)['"]?\s*\)/);
+          if(!name||!match)continue;
+          const url=new URL(match[1]);
+          if(url.protocol!=='https:'||url.hostname!=='fonts.gstatic.com'||url.username||url.password||url.port)throw new Error('El CSS contiene un recurso de fuente no permitido.');
+          let weight=st.getPropertyValue('font-weight').trim()||'400';
+          if(weight==='normal')weight='400';if(weight==='bold')weight='700';
+          if(!/^\d+(?:\s+\d+)?$/.test(weight))continue;
+          const style=st.getPropertyValue('font-style').trim()||'normal';
+          if(!['normal','italic','oblique'].includes(style))continue;
+          faces.push({name,url:url.href,weight,style,unicodeRange:st.getPropertyValue('unicode-range')||'U+0-10FFFF',stretch:st.getPropertyValue('font-stretch')||'normal'});
+        }
+        if(!faces.length)throw new Error('El enlace no contiene fuentes compatibles.');return faces;
+      }
+      function registerFaces(data,group='Importadas'){
+        const entries=[];
+        for(const item of data){
+          const entry=addGoogle(item.name,group);if(!entries.includes(entry))entries.push(entry);
+          const signature=[item.url,item.weight,item.style,item.unicodeRange,item.stretch].join('|');
+          if(entry.faces.some(f=>f.signature===signature))continue;
+          const face=new FontFace(entry.family,`url("${item.url}")`,{weight:item.weight,style:item.style,unicodeRange:item.unicodeRange,stretch:item.stretch,display:'block'});
+          document.fonts.add(face);
+          const bounds=item.weight.split(/\s+/).map(Number),min=bounds[0],max=bounds[1]||min;
+          entry.faces.push({face,signature,min,max,style:item.style,unicodeRange:item.unicodeRange});
+          const weights=new Set([min,max,...Array.from({length:9},(_,i)=>(i+1)*100).filter(w=>w>=min&&w<=max)]);
+          for(const weight of weights){if(!entry.variants.some(v=>v.weight===weight&&v.style===item.style))entry.variants.push({weight,style:item.style});}
+        }
+        for(const entry of entries){entry.variants.sort((a,b)=>a.style.localeCompare(b.style)||a.weight-b.weight);entry.dataReady=true;}
+        return entries;
+      }
+      async function ensureMetadata(entry){
+        if(entry.blockedReason)throw new Error(entry.blockedReason);
+        if(entry.kind==='system'||entry.dataReady)return entry;
+        if(entry.metadataPromise)return entry.metadataPromise;
+        entry.metadataPromise=(async()=>{
+          if(entry.kind==='local'){
+            const face=new FontFace(entry.family,`url("${entry.url}")`,{weight:'400',style:'normal',display:'block'});
+            document.fonts.add(face);entry.faces=[{face,min:400,max:400,style:'normal',unicodeRange:'U+0-10FFFF'}];entry.dataReady=true;
+          }else{
+            const data=cssFontFaces(await fetchCss(googleUrl(entry.name)));
+            registerFaces(data,entry.group);
+            if(!entry.variants.length)throw new Error('No se encontraron variantes para '+entry.name);
+          }
+          return entry;
+        })().catch(error=>{entry.metadataPromise=null;throw error;});
+        return entry.metadataPromise;
+      }
+      function subsetNeeded(range,text){
+        const bounds=range.split(',').map(r=>{
+          const v=r.trim().replace(/^U\+/i,'');
+          if(v.includes('?'))return [parseInt(v.replaceAll('?','0'),16),parseInt(v.replaceAll('?','F'),16)];
+          const parts=v.split('-').map(x=>parseInt(x,16));return [parts[0],parts[1]??parts[0]];
+        });
+        return [...text].some(char=>bounds.some(([a,b])=>char.codePointAt(0)>=a&&char.codePointAt(0)<=b));
+      }
+      async function ensureCharacters(entry,variant,text){
+        if(entry.kind==='system')return;
+        const faces=entry.faces.filter(f=>f.style===variant.style&&variant.weight>=f.min&&variant.weight<=f.max&&subsetNeeded(f.unicodeRange,text));
+        if(!faces.length)throw new Error('La variante no tiene glifos disponibles para este texto.');
+        await withTimeout(Promise.all(faces.map(f=>f.face.load())));
+      }
+      function showFontInfo(entry,variant){
+        $('selectedFontName').textContent=entry.name;
+        $('selectedFontPreview').textContent=entry.name;
+        Object.assign($('selectedFontPreview').style,{fontFamily:`"${entry.family}",sans-serif`,fontWeight:variant.weight,fontStyle:variant.style});
+        const license=$('fontLicense');license.replaceChildren();
+        if(entry.sourceUrl){const a=document.createElement('a');a.href=entry.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent=entry.licenseLabel;license.append(a);}else license.textContent=entry.licenseLabel;
+        if(entry.missingSpanish?.length)license.append(document.createTextNode(' · Sin glifos: '+entry.missingSpanish.join(' ')));
+      }
+      async function selectFont(id=selectedFont,wanted=variantKey(activeVariant)){
+        const revision=++fontRequest,entry=FONTS.get(id);
+        selectedFont=id;selectionBusy=true;updatePrintState();setStatus('fontStatus','Cargando '+entry.name+'…');
+        try{
+          await withTimeout(ensureMetadata(entry));
+          const variant=chooseVariant(entry,wanted);
+          await ensureCharacters(entry,variant,REFERENCE.join('')+textInput.value);
+          if(revision!==fontRequest)return;
+          activeFont=id;activeVariant=variant;syncVariants(entry,variant);showFontInfo(entry,variant);
+          setStatus('fontStatus',entry.kind==='system'?'Fuente del sistema: la disponibilidad depende del equipo.':'');
+          layout();
+        }catch(error){
+          if(revision!==fontRequest)return;
+          selectedFont=activeFont;
+          const old=FONTS.get(activeFont);
+          if(old.variants.length)syncVariants(old,activeVariant);
+          setStatus('fontStatus','No se pudo cargar '+entry.name+'. '+(error.message||'Revisa tu conexión.'),true);
+          if(!pagesEl.children.length){showFontInfo(old,activeVariant);layout();}
+        }finally{if(revision===fontRequest){selectionBusy=false;updatePrintState();}}
+      }
+      function requestLayout(){fontReady=selectFont(selectedFont,variantSelect.value||variantKey(activeVariant));return fontReady;}
+      function scheduleLayout(){clearTimeout(debounceTimer);debounceTimer=setTimeout(requestLayout,90);}
+      async function importFont(){
+        const button=$('loadFontBtn');button.disabled=true;setStatus('importStatus','Consultando Google Fonts…');
+        try{
+          const url=new URL($('fontUrl').value.trim());
+          if(url.protocol!=='https:'||url.username||url.password||url.port)throw new Error('Usa un enlace HTTPS de Google Fonts.');
+          let cssUrl;
+          if(url.hostname==='fonts.google.com'&&/^\/specimen\/[^/]+\/?$/.test(url.pathname)){
+            const family=decodeURIComponent(url.pathname.split('/')[2]).replaceAll('+',' ');
+            cssUrl=googleUrl(family);
+          }else if(url.hostname==='fonts.googleapis.com'&&['/css','/css2'].includes(url.pathname)){
+            url.searchParams.delete('text');cssUrl=url.href;
+          }else throw new Error('Pega una página /specimen/ o un enlace CSS de fonts.googleapis.com.');
+          const data=cssFontFaces(await fetchCss(cssUrl));
+          const entries=registerFaces(data);
+          fontReady=selectFont(entries[0].id,variantKey(activeVariant));await fontReady;
+          setStatus('importStatus',entries.map(e=>e.name).join(', ')+' · añadida(s) al catálogo.');
+        }catch(error){setStatus('importStatus',error.message||'No se pudo importar la fuente.',true);}
+        finally{button.disabled=false;}
+      }
+      // Catálogo visual: muestras independientes de la selección del documento.
+      const fontPopup=$('fontPopup'),fontList=$('fontList'),fontSearch=$('fontSearch');
+      let visibleFontIds=[],activeOption=0,previewRunning=0;
+      const previewQueue=[],previewQueued=new Set();
+      const previewObserver=new IntersectionObserver(entries=>{
+        for(const item of entries)if(item.isIntersecting){previewObserver.unobserve(item.target);queuePreview(item.target);}
+      },{root:fontList,rootMargin:'180px'});
+      function sampleText(){return [...textInput.value.replace(/\s+/g,' ').trim()].slice(0,24).join('')||'Aa · Hola Ññ';}
+      function queuePreview(node){
+        if(previewQueued.has(node))return;previewQueued.add(node);previewQueue.push(node);pumpPreviews();
+      }
+      function pumpPreviews(){
+        while(previewRunning<3&&previewQueue.length){
+          const node=previewQueue.shift();previewQueued.delete(node);
+          if(!node.isConnected||fontPopup.hidden)continue;
+          previewRunning++;
+          (async()=>{
+            const entry=FONTS.get(node.dataset.font),sample=node.querySelector('.font-sample');
+            try{
+              await withTimeout(ensureMetadata(entry));
+              const variant=chooseVariant(entry,entry.id==='fredoka'?'normal:700':'normal:400');
+              const text=sampleText();await ensureCharacters(entry,variant,text);
+              if(!node.isConnected)return;
+              sample.textContent=text;sample.classList.remove('pending');
+              Object.assign(sample.style,{fontFamily:`"${entry.family}",sans-serif`,fontWeight:variant.weight,fontStyle:variant.style,fontSynthesis:'none'});
+            }catch(error){if(node.isConnected){sample.textContent=entry.blockedReason?'Requiere licencia compatible':'No disponible · selecciona para reintentar';sample.classList.add('pending');}}
+            finally{previewRunning--;pumpPreviews();}
+          })();
+        }
+      }
+      function renderFontList(){
+        previewObserver.disconnect();fontList.replaceChildren();
+        const query=fontSearch.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+        visibleFontIds=[...FONTS.values()].filter(e=>(e.name+' '+e.group).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(query)).map(e=>e.id);
+        let group='';
+        for(const id of visibleFontIds){
+          const entry=FONTS.get(id);
+          if(group!==entry.group){const heading=document.createElement('div');heading.className='font-group';heading.textContent=entry.group;heading.setAttribute('role','presentation');fontList.append(heading);group=entry.group;}
+          const node=document.createElement('div');node.className='font-option';node.id='option-'+id;node.dataset.font=id;node.setAttribute('role','option');node.setAttribute('aria-selected',String(id===activeFont));
+          const name=document.createElement('span');name.className='font-name';name.textContent=entry.name;
+          const badge=document.createElement('span');badge.className='badge';badge.textContent=entry.blockedReason?'Licencia requerida':entry.kind==='local'?'Personal/demo':entry.kind==='google'?'Google Fonts':'Sistema';
+          const sample=document.createElement('span');sample.className='font-sample pending';sample.textContent='Cargando muestra…';sample.setAttribute('aria-hidden','true');
+          node.append(name,badge,sample);node.addEventListener('click',()=>chooseFont(id));fontList.append(node);previewObserver.observe(node);
+        }
+        activeOption=Math.max(0,visibleFontIds.indexOf(activeFont));highlightOption(false);
+        $('fontResults').textContent=visibleFontIds.length?`${visibleFontIds.length} fuentes · ↑ ↓ para recorrer · Enter para elegir`:'Sin coincidencias';
+      }
+      function highlightOption(scroll=true){
+        fontList.querySelectorAll('.font-option').forEach(n=>n.classList.toggle('active',n.dataset.font===visibleFontIds[activeOption]));
+        const id=visibleFontIds[activeOption]?'option-'+visibleFontIds[activeOption]:null;
+        for(const el of [fontSearch,fontSelect]){if(id)el.setAttribute('aria-activedescendant',id);else el.removeAttribute('aria-activedescendant');}
+        if(scroll&&id)$(id)?.scrollIntoView({block:'nearest'});
+      }
+      function positionFontPopup(){
+        if(fontPopup.hidden)return;
+        const r=fontSelect.getBoundingClientRect(),width=Math.min(380,innerWidth-16),below=innerHeight-r.bottom-8,above=r.top-8;
+        const useBelow=below>=220||below>=above,available=Math.max(120,useBelow?below:above);
+        fontPopup.style.width=width+'px';fontPopup.style.left=Math.max(8,Math.min(r.left,innerWidth-width-8))+'px';
+        fontList.style.maxHeight=Math.max(70,Math.min(310,available-76))+'px';
+        fontPopup.style.top=useBelow?r.bottom+4+'px':Math.max(8,r.top-fontPopup.offsetHeight-4)+'px';
+      }
+      function openFontPopup(){fontPopup.hidden=false;fontSelect.setAttribute('aria-expanded','true');fontSearch.value='';renderFontList();positionFontPopup();fontSearch.focus();}
+      function closeFontPopup(restore=true){fontPopup.hidden=true;fontSelect.setAttribute('aria-expanded','false');fontSelect.removeAttribute('aria-activedescendant');previewObserver.disconnect();if(restore)fontSelect.focus();}
+      function chooseFont(id){closeFontPopup();fontReady=selectFont(id,variantKey(activeVariant));}
+      fontSelect.addEventListener('click',()=>fontPopup.hidden?openFontPopup():closeFontPopup());
+      fontSearch.addEventListener('input',()=>{renderFontList();positionFontPopup();});
+      fontSearch.addEventListener('keydown',event=>{
+        if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeFontPopup();}
+        if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){
+          event.preventDefault();activeOption=event.key==='Home'?0:event.key==='End'?visibleFontIds.length-1:Math.max(0,Math.min(visibleFontIds.length-1,activeOption+(event.key==='ArrowDown'?1:-1)));highlightOption();
+        }
+        if(event.key==='Enter'&&visibleFontIds[activeOption]){event.preventDefault();chooseFont(visibleFontIds[activeOption]);}
+        if(event.key==='Tab')closeFontPopup(false);
+      });
+      fontSelect.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();openFontPopup();}});
+      document.addEventListener('pointerdown',e=>{if(!fontPopup.hidden&&!fontPopup.contains(e.target)&&!fontSelect.contains(e.target))closeFontPopup(false);});
+      // Medidas canónicas en mm. Las entradas editadas no cambian geometría hasta validarse.
+      function parseMeasure(value){const text=value.trim().replace(',','.');return /^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)?Number(text)*(unit==='cm'?10:1):NaN;}
+      function syncMeasures(){
+        document.querySelectorAll('[data-unit]').forEach(e=>e.textContent=unit);
+        $('paperWidth').value=displayMeasure(paperWidthMm);$('paperHeight').value=displayMeasure(paperHeightMm);
+        heightNumber.value=displayMeasure(targetMm);marginNumber.value=displayMeasure(marginMm);$('wordGapNumber').value=displayMeasure(gapMm);
+        heightSlider.value=targetMm;heightSlider.max=Math.min(200,paperHeightMm);
+        marginSlider.value=marginMm;marginSlider.max=Math.min(100,Math.max(10,Math.floor(paperWidthMm/2-5)));
+        wordGapSlider.value=gapMm;
+        updateSpacingOutputs();
+      }
+      function populatePapers(){
+        const selected=paperSelect.value||'letter';paperSelect.replaceChildren();let group;
+        for(const [id,paper] of Object.entries(PAPERS)){
+          if(!group||group.label!==paper.group){group=document.createElement('optgroup');group.label=paper.group;paperSelect.append(group);}
+          group.append(new Option(`${paper.name} · ${displayMeasure(paper.width)} × ${displayMeasure(paper.height)} ${unit}`,id));
+        }
+        paperSelect.append(new Option('Personalizado…','custom'));paperSelect.value=selected;
+      }
+      function clampFranja(){
+        const max=Math.min(200,paperHeightMm);
+        if(targetMm>max){targetMm=max;setStatus('paperNotice','Franja ajustada a '+measureLabel(max)+' para caber en la hoja.');}
+        else setStatus('paperNotice','');
+      }
+      function changePaper(){
+        const custom=paperSelect.value==='custom';
+        $('paperWidth').readOnly=!custom;$('paperHeight').readOnly=!custom;$('orientationSelect').disabled=custom;
+        if(custom){paperWidthMm=customWidthMm;paperHeightMm=customHeightMm;}
+        else{const p=PAPERS[paperSelect.value],landscape=$('orientationSelect').value==='landscape';paperWidthMm=landscape?p.height:p.width;paperHeightMm=landscape?p.width:p.height;}
+        invalidPaper=false;setStatus('paperError','');for(const id of ['paperWidth','paperHeight'])$(id).removeAttribute('aria-invalid');
+        clampFranja();syncMeasures();updatePrintState();requestLayout();
+      }
+      function commitPaper(){
+        if(paperSelect.value!=='custom')return true;
+        const width=parseMeasure($('paperWidth').value),height=parseMeasure($('paperHeight').value);
+        invalidPaper=![width,height].every(n=>Number.isFinite(n)&&n>=20&&n<=2000);
+        for(const [id,value] of [['paperWidth',width],['paperHeight',height]])$(id).setAttribute('aria-invalid',String(!Number.isFinite(value)||value<20||value>2000));
+        setStatus('paperError',invalidPaper?`Cada lado debe medir entre ${measureLabel(20)} y ${measureLabel(2000)}.`:'',invalidPaper);updatePrintState();
+        if(invalidPaper)return false;
+        customWidthMm=paperWidthMm=Math.round(width*10)/10;customHeightMm=paperHeightMm=Math.round(height*10)/10;
+        clampFranja();syncMeasures();requestLayout();return true;
+      }
+      function commitMeasures(){
+        const height=parseMeasure(heightNumber.value),margin=parseMeasure(marginNumber.value),gap=parseMeasure($('wordGapNumber').value);
+        const max=Math.min(200,paperHeightMm),maxMargin=Math.max(0,paperWidthMm/2-5);
+        const badHeight=!Number.isFinite(height)||height<2.5||height>max;
+        const badMargin=!Number.isFinite(margin)||margin<0||margin>maxMargin;
+        const badGap=!Number.isFinite(gap)||gap<-100||gap>100;
+        invalidMeasure=badHeight||badMargin||badGap;
+        heightNumber.setAttribute('aria-invalid',String(badHeight));
+        marginNumber.setAttribute('aria-invalid',String(badMargin));
+        $('wordGapNumber').setAttribute('aria-invalid',String(badGap));
+        setStatus('measureError',
+          badHeight?`Franja: ${measureLabel(2.5)} a ${measureLabel(max)}.` :
+          badMargin?`Margen: 0 a ${measureLabel(maxMargin)}.` :
+          badGap?`Entre palabras: ${measureLabel(-100)} a ${measureLabel(100)}.` :
+          '', invalidMeasure
+        );
+        updatePrintState();
+        if(invalidMeasure)return false;
+        targetMm=Math.round(height*10)/10;marginMm=Math.round(margin*10)/10;gapMm=Math.round(gap*10)/10;
+        syncMeasures();scheduleLayout();return true;
+      }
+      for(const id of ['paperWidth','paperHeight']){
+        $(id).addEventListener('input',()=>{invalidPaper=true;updatePrintState();});
+        $(id).addEventListener('change',commitPaper);$(id).addEventListener('keydown',e=>{if(e.key==='Enter')commitPaper();});
+      }
+      for(const el of [heightNumber,marginNumber,$('wordGapNumber')]){
+        el.addEventListener('input',()=>{invalidMeasure=true;updatePrintState();});el.addEventListener('change',commitMeasures);el.addEventListener('keydown',e=>{if(e.key==='Enter')commitMeasures();});
+      }
+      $('swapPaper').addEventListener('click',()=>{
+        if(paperSelect.value==='custom'){
+          if(!commitPaper())return;[customWidthMm,customHeightMm]=[customHeightMm,customWidthMm];
+        }else $('orientationSelect').value=$('orientationSelect').value==='landscape'?'portrait':'landscape';
+        changePaper();
+      });
+      $('unitSelect').addEventListener('change',()=>{
+        if(!commitPaper()||!commitMeasures()){$('unitSelect').value=unit;return;}
+        unit=$('unitSelect').value;populatePapers();syncMeasures();requestLayout();
+      });
+      paperSelect.addEventListener('change',changePaper);$('orientationSelect').addEventListener('change',changePaper);
+      heightSlider.addEventListener('input',()=>{targetMm=Number(heightSlider.value);heightNumber.value=displayMeasure(targetMm);commitMeasures();});
+      marginSlider.addEventListener('input',()=>{marginMm=Number(marginSlider.value);marginNumber.value=displayMeasure(marginMm);commitMeasures();});
+      $('zeroMarginBtn')?.addEventListener('click',()=>{marginMm=0;marginNumber.value=displayMeasure(0);commitMeasures();});
+      wordGapSlider.addEventListener('input',()=>{gapMm=Number(wordGapSlider.value);$('wordGapNumber').value=displayMeasure(gapMm);commitMeasures();});
+      for(const slider of [borderSlider,letterSpacingSlider])slider.addEventListener('input',()=>{updateSpacingOutputs();updateLetterSpacing();scheduleLayout();});
+      textInput.addEventListener('input',scheduleLayout);
+      for(const el of [cleanWhitespaceToggle,guidesToggle,printGuidesToggle])el.addEventListener('change',requestLayout);
+      variantSelect.addEventListener('change',()=>{fontReady=selectFont(selectedFont,variantSelect.value);});
+      $('loadFontBtn').addEventListener('click',importFont);$('fontUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();importFont();}});
+      clearBtn.addEventListener('click',()=>{textInput.value='';requestLayout();textInput.focus();});
+      printBtn.addEventListener('click',async()=>{
+        if(!commitPaper()||!commitMeasures())return;
+        clearTimeout(debounceTimer);await requestLayout();let pending;
+        do{pending=fontReady;await pending;}while(pending!==fontReady);
+        if(!invalidPaper&&!invalidMeasure&&!selectionBusy)window.print();
+      });
+      window.addEventListener('beforeprint',()=>{if(!selectionBusy&&!invalidPaper&&!invalidMeasure)layout();});
+      // Panel único; cambiar la ubicación o cerrarlo nunca altera los ajustes.
+      const configToggle=$('configToggle'),configPanel=$('configPanel');
+      function setPanel(open){
+        if(!fontPopup.hidden)closeFontPopup(false);
+        configPanel.hidden=!open;document.body.classList.toggle('config-closed',!open);configToggle.setAttribute('aria-expanded',String(open));
+        if(!open)configToggle.focus();requestAnimationFrame(scalePages);
+      }
+      configToggle.addEventListener('click',()=>setPanel(configPanel.hidden));
+      $('panelLocation').addEventListener('change',()=>{if(!fontPopup.hidden)closeFontPopup(false);document.body.dataset.panel=$('panelLocation').value;requestAnimationFrame(scalePages);});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!configPanel.hidden){setPanel(false);e.preventDefault();}});
+      window.addEventListener('resize',()=>{scalePages();positionFontPopup();});
+      configPanel.addEventListener('scroll',positionFontPopup);
+      new ResizeObserver(()=>{scalePages();positionFontPopup();}).observe(pagesEl);
+      const icons={
+        settings:'M3 5h18M3 12h18M3 19h18M8 2v6M16 9v6M9 16v6',
+        sticker:'M4 3h16v12l-6 6H4zM14 21v-6h6',
+        print:'M6 8V3h12v5M6 17H3V8h18v9h-3M6 14h12v7H6zM17 11h1',
+        text:'M4 4h16M12 4v16M8 20h8',
+        paper:'M5 2h9l5 5v15H5zM14 2v6h5M8 12h8M8 16h8',
+        spacing:'M3 6v12M21 6v12M6 12h12M9 9l-3 3 3 3M15 9l3 3-3 3',
+        chevron:'m6 9 6 6 6-6',download:'M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5',
+        swap:'M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4',clear:'m4 15 9-12 8 6-9 12H8zM9 9l8 6M12 21h9'
+      };
+      document.querySelectorAll('[data-icon]').forEach(svg=>{svg.setAttribute('viewBox','0 0 24 24');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',icons[svg.dataset.icon]);svg.append(path);});
+      populatePapers();syncMeasures();
+      fontReady=selectFont('fredoka','normal:700');
     })();
   </script>
 </body>
