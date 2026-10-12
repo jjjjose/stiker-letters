@@ -92,7 +92,42 @@
     @media(max-width:1100px) and (min-width:701px){body:not([data-panel=side]) .config-grid{grid-template-columns:1fr 1fr}.config-section:last-child{grid-column:1/-1}body[data-panel=side] .config-section:last-child{grid-column:auto}}
     @media(max-width:700px){.toolbar{flex-wrap:wrap;gap:5px}.toolbar h1{font-size:13px}.toolbar .summary{display:none}.toolbar #printBtn{margin-left:auto}.toolbar .location-label{display:none}.app,body[data-panel=side] .app{grid-template-columns:minmax(0,1fr)}.config-grid{grid-template-columns:1fr}.controls,body[data-panel=side] .controls{position:static;max-height:50vh;border-right:0}.preview-shell{padding:10px 5px}.toolbar #panelLocation{display:none}}
     @media(pointer:coarse){:root{--control:36px}.font-trigger{height:36px}.checkrow{min-height:36px}.font-option{min-height:56px}input[type=range]{min-height:32px}.measure-row output{height:36px}}
-    @media print{@page{size:279.4mm 215.9mm;margin:0}body{background:white}.toolbar,.controls,.preview-head,.font-popup{display:none!important}.app,body[data-panel=side] .app{display:block}.preview-shell{padding:0;overflow:visible}.pages{display:block}.page-wrap{width:var(--page-width)!important;height:var(--page-height)!important;margin:0!important;break-after:page}.page-wrap:last-child{break-after:auto}.page{position:relative!important;transform:none!important;box-shadow:none!important;width:var(--page-width)!important;height:var(--page-height)!important}.page-number{display:none}.page:not(.print-guides) .page-guides{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+    .badge-counter{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#35495a;color:#fff;font-size:10px;font-weight:700;line-height:1;margin-left:2px}
+    .badge-counter.bump{animation:counterBump .35s cubic-bezier(.175,.885,.32,1.275)}
+    @keyframes counterBump{0%{transform:scale(1)}50%{transform:scale(1.35);background:#2f6f9f}100%{transform:scale(1)}}
+    .history-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:90;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    .history-backdrop.open{opacity:1;pointer-events:auto}
+    .history-drawer{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:100vw;background:#fff;z-index:100;box-shadow:-8px 0 32px rgba(15,23,42,.16);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.16,1,.3,1)}
+    .history-drawer.open{transform:translateX(0)}
+    .history-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface);gap:8px}
+    .history-title{font-size:13px;font-weight:750;display:flex;align-items:center;gap:6px;margin:0}
+    .history-tools{display:flex;align-items:center;gap:5px}
+    .history-search-bar{padding:8px 14px;border-bottom:1px solid var(--border);background:#fff}
+    .history-search-bar input{width:100%;font-size:11px}
+    .history-list{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scrollbar-gutter:stable}
+    .history-card{border:1px solid var(--border);border-radius:8px;background:#fff;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.03);transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column;gap:6px;position:relative}
+    .history-card:hover{border-color:#b4c3d2;box-shadow:0 4px 14px rgba(15,23,42,.06)}
+    .history-card-top{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted);gap:6px}
+    .history-card-time{display:flex;align-items:center;gap:4px;font-weight:600}
+    .history-card-text{font-size:12px;line-height:1.45;color:var(--ink);background:var(--surface);border-left:3px solid #8ba4b9;border-radius:0 4px 4px 0;padding:5px 8px;font-style:italic;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    .history-specs{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+    .spec-pill{font-size:10px;padding:2px 6px;border-radius:4px;background:#edf1f5;color:var(--muted);display:inline-flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums}
+    .spec-pill.font-spec{background:#e3ecf5;color:#234a6c;font-weight:650;font-size:11px}
+    .history-card-actions{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:4px;padding-top:6px;border-top:1px dashed var(--border)}
+    .btn-restore{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:4px 9px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;cursor:pointer;transition:background .15s}
+    .btn-restore:hover{background:#233544}
+    .btn-icon-subtle{border:none;background:transparent;color:var(--muted);padding:4px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+    .btn-icon-subtle:hover{background:#f0f2f5;color:var(--ink)}
+    .btn-icon-subtle.danger:hover{background:#fee2e2;color:#b91c1c}
+    .history-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;color:var(--muted);gap:10px;margin:auto}
+    .history-empty svg{width:42px;height:42px;stroke-width:1.3;stroke:#94a3b8}
+    .history-empty h3{font-size:13px;margin:0;color:var(--ink)}
+    .history-empty p{font-size:11px;line-height:1.5;margin:0;max-width:240px}
+    .toast-container{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:120;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+    .toast{pointer-events:auto;background:rgba(21,29,38,.92);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:7px 14px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:6px;box-shadow:0 8px 24px rgba(0,0,0,.18);animation:toastIn .28s cubic-bezier(.16,1,.3,1) forwards;transition:opacity .2s,transform .2s}
+    .toast.out{opacity:0;transform:translateY(8px)}
+    @keyframes toastIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+    @media print{@page{size:279.4mm 215.9mm;margin:0}body{background:white}.toolbar,.controls,.preview-head,.font-popup,.history-backdrop,.history-drawer,.toast-container{display:none!important}.app,body[data-panel=side] .app{display:block}.preview-shell{padding:0;overflow:visible}.pages{display:block}.page-wrap{width:var(--page-width)!important;height:var(--page-height)!important;margin:0!important;break-after:page}.page-wrap:last-child{break-after:auto}.page{position:relative!important;transform:none!important;box-shadow:none!important;width:var(--page-width)!important;height:var(--page-height)!important}.page-number{display:none}.page:not(.print-guides) .page-guides{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
   </style>
   <style id="paperPrintStyle">@page{size:279.4mm 215.9mm;margin:0}</style>
 </head>
@@ -103,6 +138,7 @@
     <label for="panelLocation" class="unit location-label">Panel</label>
     <select id="panelLocation" aria-label="Ubicación de configuración"><option value="top">Arriba</option><option value="side">Lateral</option></select>
     <span id="configSummary" class="summary">Fredoka · Carta horizontal</span>
+    <button id="historyToggle" type="button" aria-haspopup="dialog" aria-expanded="false" title="Historial de impresiones (Ctrl+H)"><svg class="icon" data-icon="history" aria-hidden="true"></svg>Historial <span id="historyBadge" class="badge-counter">0</span></button>
     <button class="primary" id="printBtn" type="button"><svg class="icon" data-icon="print" aria-hidden="true"></svg>Imprimir / PDF</button>
   </header>
   <div class="app">
@@ -152,6 +188,22 @@
     <main class="preview-shell"><div class="preview-head"><span id="paperInfo">Carta horizontal</span><span id="fontInfo"></span></div><div id="pages" class="pages"></div></main>
   </div>
   <div id="fontPopup" class="font-popup" hidden><input id="fontSearch" type="search" placeholder="Buscar fuente o categoría…" role="combobox" aria-label="Buscar fuente" aria-autocomplete="list" aria-expanded="true" aria-controls="fontList"><div id="fontList" class="font-list" role="listbox" aria-label="Catálogo de fuentes"></div><div id="fontResults" class="status" role="status"></div></div>
+  <div id="historyBackdrop" class="history-backdrop" hidden></div>
+  <aside id="historyDrawer" class="history-drawer" role="dialog" aria-modal="true" aria-label="Historial de impresiones" hidden>
+    <div class="history-head">
+      <h2 class="history-title"><svg class="icon" data-icon="history" aria-hidden="true"></svg> Historial de impresiones</h2>
+      <div class="history-tools">
+        <button id="exportHistoryBtn" class="btn-icon-subtle" type="button" title="Exportar historial (JSON)"><svg class="icon" data-icon="download" aria-hidden="true"></svg></button>
+        <button id="clearHistoryBtn" class="btn-icon-subtle danger" type="button" title="Vaciar historial"><svg class="icon" data-icon="clear" aria-hidden="true"></svg></button>
+        <button id="closeHistoryBtn" class="btn-icon-subtle" type="button" title="Cerrar historial (Esc)" aria-label="Cerrar"><svg class="icon" data-icon="close" aria-hidden="true"></svg></button>
+      </div>
+    </div>
+    <div class="history-search-bar">
+      <input id="historySearch" type="search" placeholder="Buscar por texto, tipografía o fecha…" aria-label="Buscar en historial">
+    </div>
+    <div id="historyList" class="history-list" role="feed" aria-label="Entradas de historial"></div>
+  </aside>
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
   <canvas id="measureCanvas" width="1" height="1" hidden></canvas>
   <script src="fonts/catalog.js"></script>
   <script>
@@ -1015,9 +1067,331 @@
         clearTimeout(debounceTimer);await requestLayout();let pending;
         do{pending=fontReady;await pending;}while(pending!==fontReady);
         renderAllPages();
-        if(!invalidPaper&&!invalidMeasure&&!selectionBusy)window.print();
+        if(!invalidPaper&&!invalidMeasure&&!selectionBusy){
+          recordPrintHistory();
+          window.print();
+        }
       });
-      window.addEventListener('beforeprint',()=>{if(!selectionBusy&&!invalidPaper&&!invalidMeasure){layout();renderAllPages();}});
+      window.addEventListener('beforeprint',()=>{
+        if(!selectionBusy&&!invalidPaper&&!invalidMeasure){
+          layout();
+          renderAllPages();
+          recordPrintHistory();
+        }
+      });
+
+      // Historial de impresiones (localStorage persistente con límite FIFO 50)
+      const HISTORY_KEY = 'sticker_letters_history_v1';
+      function loadHistory(){
+        try {
+          const raw = localStorage.getItem(HISTORY_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch(e) { return []; }
+      }
+      function saveHistory(list){
+        try {
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 50)));
+        } catch(e) {}
+      }
+      function updateHistoryBadge(){
+        const list = loadHistory();
+        const badge = $('historyBadge');
+        if (badge) {
+          badge.textContent = list.length;
+          badge.classList.remove('bump');
+          void badge.offsetWidth;
+          if (list.length > 0) badge.classList.add('bump');
+        }
+      }
+      function formatRelativeTime(ts){
+        const diff = Date.now() - ts;
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'Hace un momento';
+        if (mins === 1) return 'Hace 1 min';
+        if (mins < 60) return `Hace ${mins} min`;
+        const hours = Math.floor(mins / 60);
+        if (hours === 1) return 'Hace 1 hora';
+        if (hours < 24) return `Hace ${hours} horas`;
+        const days = Math.floor(hours / 24);
+        if (days === 1) return 'Ayer';
+        return new Date(ts).toLocaleDateString('es', { day:'numeric', month:'short' });
+      }
+      function showToast(message){
+        const container = $('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(()=>{
+          toast.classList.add('out');
+          setTimeout(()=>toast.remove(), 250);
+        }, 2800);
+      }
+      function captureCurrentSnapshot(){
+        const now = Date.now();
+        const paperObj = PAPERS[paperSelect.value] || { name: 'Personalizado' };
+        const fontObj = FONTS.get(activeFont) || { name: activeFont, family: activeFont };
+        return {
+          id: 'hist_' + now + '_' + Math.random().toString(36).slice(2, 6),
+          timestamp: now,
+          dateStr: new Date(now).toLocaleString('es', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+          text: textInput.value,
+          stats: {
+            pageCount: pagesData.length || 1,
+            wordCount: wordCountEl.textContent || '0'
+          },
+          config: {
+            font: activeFont,
+            fontName: fontObj.name,
+            fontFamily: fontObj.family,
+            variantKey: variantKey(activeVariant),
+            variantLabel: variantLabel(activeVariant),
+            variantWeight: activeVariant.weight,
+            variantStyle: activeVariant.style,
+            paper: paperSelect.value,
+            paperName: paperObj.name,
+            orientation: $('orientationSelect').value,
+            unit: unit,
+            paperWidthMm: paperWidthMm,
+            paperHeightMm: paperHeightMm,
+            customWidthMm: customWidthMm,
+            customHeightMm: customHeightMm,
+            marginMm: marginMm,
+            targetMm: targetMm,
+            borderPercent: Number(borderSlider.value),
+            letterSpacing: currentLetterSpacing,
+            gapMm: gapMm,
+            cleanWhitespace: cleanWhitespaceToggle.checked,
+            guides: guidesToggle.checked,
+            printGuides: printGuidesToggle.checked
+          }
+        };
+      }
+      let lastRecordedPrintTs = 0;
+      function recordPrintHistory(){
+        if (Date.now() - lastRecordedPrintTs < 400) return;
+        lastRecordedPrintTs = Date.now();
+        const entry = captureCurrentSnapshot();
+        const list = loadHistory();
+        list.unshift(entry);
+        saveHistory(list);
+        updateHistoryBadge();
+        showToast(`✨ Impresión guardada (#${list.length})`);
+        if (!$('historyDrawer')?.hidden) renderHistory($('historySearch')?.value || '');
+      }
+
+      function renderHistory(query = ''){
+        const list = loadHistory();
+        const container = $('historyList');
+        if (!container) return;
+        container.innerHTML = '';
+        const q = query.trim().toLowerCase();
+        const filtered = q ? list.filter(item => 
+          item.text.toLowerCase().includes(q) ||
+          item.config.fontName.toLowerCase().includes(q) ||
+          item.config.paperName.toLowerCase().includes(q) ||
+          item.dateStr.toLowerCase().includes(q)
+        ) : list;
+
+        if (!filtered.length){
+          const empty = document.createElement('div');
+          empty.className = 'history-empty';
+          empty.innerHTML = q ? 
+            `<svg class="icon" data-icon="search" aria-hidden="true"></svg><h3>Sin coincidencias</h3><p>No se encontraron impresiones con "${query}".</p>` :
+            `<svg class="icon" data-icon="history" aria-hidden="true"></svg><h3>Historial vacío</h3><p>Cada vez que pulses <b>Imprimir / PDF</b> se guardará una copia con el texto, la fecha y la configuración exacta.</p>`;
+          container.appendChild(empty);
+          refreshIcons(empty);
+          return;
+        }
+
+        filtered.forEach(item => {
+          const card = document.createElement('article');
+          card.className = 'history-card';
+          card.dataset.id = item.id;
+
+          const top = document.createElement('div');
+          top.className = 'history-card-top';
+          top.innerHTML = `
+            <span class="history-card-time" title="${item.dateStr}">
+              <svg class="icon" data-icon="history" style="width:12px;height:12px" aria-hidden="true"></svg>
+              ${formatRelativeTime(item.timestamp)}
+            </span>
+            <span class="spec-pill">${item.config.paperName} · ${item.stats.pageCount} ${item.stats.pageCount === 1 ? 'hoja' : 'hojas'}</span>
+          `;
+
+          const textPreview = document.createElement('div');
+          textPreview.className = 'history-card-text';
+          textPreview.textContent = item.text.trim() ? `“${item.text.trim()}”` : '“(Texto vacío)”';
+
+          const specs = document.createElement('div');
+          specs.className = 'history-specs';
+          specs.innerHTML = `
+            <span class="spec-pill font-spec" style="font-family:'${item.config.fontFamily}',sans-serif;font-weight:${item.config.variantWeight};font-style:${item.config.variantStyle}">
+              ${item.config.fontName} ${item.config.variantWeight}
+            </span>
+            <span class="spec-pill">Franja: ${displayMeasure(item.config.targetMm)} ${unit}</span>
+            <span class="spec-pill">Margen: ${item.config.marginMm === 0 ? '0' : displayMeasure(item.config.marginMm) + ' ' + unit}</span>
+            <span class="spec-pill">Espaciado: ${displayMeasure(item.config.gapMm)} ${unit}</span>
+            <span class="spec-pill">Borde: ${item.config.borderPercent}%</span>
+            <span class="spec-pill">${item.stats.wordCount} palabras</span>
+          `;
+
+          const actions = document.createElement('div');
+          actions.className = 'history-card-actions';
+
+          const restoreBtn = document.createElement('button');
+          restoreBtn.className = 'btn-restore';
+          restoreBtn.type = 'button';
+          restoreBtn.innerHTML = `<svg class="icon" data-icon="restore" style="width:13px;height:13px" aria-hidden="true"></svg> Restaurar`;
+          restoreBtn.addEventListener('click', () => restoreHistoryItem(item));
+
+          const btnGroup = document.createElement('div');
+          btnGroup.style.display = 'flex';
+          btnGroup.style.gap = '2px';
+
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'btn-icon-subtle';
+          copyBtn.type = 'button';
+          copyBtn.title = 'Copiar texto';
+          copyBtn.innerHTML = `<svg class="icon" data-icon="copy" style="width:13px;height:13px" aria-hidden="true"></svg>`;
+          copyBtn.addEventListener('click', () => {
+            navigator.clipboard?.writeText(item.text);
+            showToast('📋 Texto copiado al portapapeles');
+          });
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn-icon-subtle danger';
+          deleteBtn.type = 'button';
+          deleteBtn.title = 'Eliminar del historial';
+          deleteBtn.innerHTML = `<svg class="icon" data-icon="trash" style="width:13px;height:13px" aria-hidden="true"></svg>`;
+          deleteBtn.addEventListener('click', () => {
+            const currentList = loadHistory().filter(h => h.id !== item.id);
+            saveHistory(currentList);
+            updateHistoryBadge();
+            renderHistory($('historySearch').value);
+            showToast('Entrada eliminada');
+          });
+
+          btnGroup.append(copyBtn, deleteBtn);
+          actions.append(restoreBtn, btnGroup);
+          card.append(top, textPreview, specs, actions);
+          container.appendChild(card);
+          refreshIcons(card);
+        });
+      }
+
+      async function restoreHistoryItem(item){
+        const c = item.config;
+        textInput.value = item.text;
+        cleanWhitespaceToggle.checked = Boolean(c.cleanWhitespace);
+        guidesToggle.checked = Boolean(c.guides);
+        printGuidesToggle.checked = Boolean(c.printGuides);
+
+        unit = c.unit || 'cm';
+        $('unitSelect').value = unit;
+        populatePapers();
+
+        paperSelect.value = c.paper;
+        $('orientationSelect').value = c.orientation;
+
+        paperWidthMm = c.paperWidthMm;
+        paperHeightMm = c.paperHeightMm;
+        customWidthMm = c.customWidthMm || paperWidthMm;
+        customHeightMm = c.customHeightMm || paperHeightMm;
+        marginMm = c.marginMm;
+        targetMm = c.targetMm;
+        gapMm = c.gapMm;
+
+        borderSlider.value = c.borderPercent;
+        letterSpacingSlider.value = c.letterSpacing || 0;
+        updateLetterSpacing();
+
+        syncMeasures();
+        changePaper();
+
+        await selectFont(c.font, c.variantKey || `${c.variantStyle}:${c.variantWeight}`);
+
+        layout();
+        closeHistoryDrawer();
+        showToast(`⚡ Restaurado: ${c.fontName} · ${c.paperName} (${measureLabel(c.targetMm)})`);
+      }
+
+      const historyDrawer = $('historyDrawer');
+      const historyBackdrop = $('historyBackdrop');
+      const historyToggle = $('historyToggle');
+
+      function openHistoryDrawer(){
+        if (!historyDrawer) return;
+        historyDrawer.hidden = false;
+        historyBackdrop.hidden = false;
+        void historyDrawer.offsetWidth;
+        historyDrawer.classList.add('open');
+        historyBackdrop.classList.add('open');
+        historyToggle.setAttribute('aria-expanded', 'true');
+        historyDrawer.setAttribute('aria-hidden', 'false');
+        renderHistory();
+        $('historySearch').focus();
+      }
+
+      function closeHistoryDrawer(){
+        if (!historyDrawer) return;
+        historyDrawer.classList.remove('open');
+        historyBackdrop.classList.remove('open');
+        historyToggle.setAttribute('aria-expanded', 'false');
+        historyDrawer.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          if (!historyDrawer.classList.contains('open')) {
+            historyDrawer.hidden = true;
+            historyBackdrop.hidden = true;
+          }
+        }, 280);
+        historyToggle.focus();
+      }
+
+      historyToggle.addEventListener('click', () => {
+        historyDrawer.classList.contains('open') ? closeHistoryDrawer() : openHistoryDrawer();
+      });
+      $('closeHistoryBtn')?.addEventListener('click', closeHistoryDrawer);
+      historyBackdrop.addEventListener('click', closeHistoryDrawer);
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'h') {
+          e.preventDefault();
+          historyDrawer.classList.contains('open') ? closeHistoryDrawer() : openHistoryDrawer();
+        } else if (e.key === 'Escape' && historyDrawer.classList.contains('open')) {
+          e.preventDefault();
+          closeHistoryDrawer();
+        }
+      });
+
+      $('historySearch')?.addEventListener('input', (e) => {
+        renderHistory(e.target.value);
+      });
+
+      $('exportHistoryBtn')?.addEventListener('click', () => {
+        const list = loadHistory();
+        if (!list.length) { showToast('Historial vacío'); return; }
+        const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `historial-stickers-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('💾 Historial exportado como JSON');
+      });
+
+      $('clearHistoryBtn')?.addEventListener('click', () => {
+        if (!loadHistory().length) return;
+        if (confirm('¿Vaciar todo el historial de impresiones?')) {
+          saveHistory([]);
+          updateHistoryBadge();
+          renderHistory();
+          showToast('Historial vaciado');
+        }
+      });
+
       // Panel único; cambiar la ubicación o cerrarlo nunca altera los ajustes.
       const configToggle=$('configToggle'),configPanel=$('configPanel');
       function setPanel(open){
@@ -1027,7 +1401,7 @@
       }
       configToggle.addEventListener('click',()=>setPanel(configPanel.hidden));
       $('panelLocation').addEventListener('change',()=>{if(!fontPopup.hidden)closeFontPopup(false);document.body.dataset.panel=$('panelLocation').value;requestAnimationFrame(scalePages);});
-      document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!configPanel.hidden){setPanel(false);e.preventDefault();}});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!configPanel.hidden&&!historyDrawer.classList.contains('open')){setPanel(false);e.preventDefault();}});
       window.addEventListener('resize',()=>{scalePages();positionFontPopup();});
       configPanel.addEventListener('scroll',positionFontPopup);
       new ResizeObserver(()=>{scalePages();positionFontPopup();}).observe(pagesEl);
@@ -1039,10 +1413,26 @@
         paper:'M5 2h9l5 5v15H5zM14 2v6h5M8 12h8M8 16h8',
         spacing:'M3 6v12M21 6v12M6 12h12M9 9l-3 3 3 3M15 9l3 3-3 3',
         chevron:'m6 9 6 6 6-6',download:'M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5',
-        swap:'M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4',clear:'m4 15 9-12 8 6-9 12H8zM9 9l8 6M12 21h9'
+        swap:'M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4',clear:'m4 15 9-12 8 6-9 12H8zM9 9l8 6M12 21h9',
+        history:'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0-5v5h5M12 7v5l3 3',
+        restore:'M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15',
+        trash:'M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v3M4 7h16',
+        copy:'M8 16H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2m-6 12h8a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z',
+        close:'M18 6 6 18M6 6l12 12',search:'M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z'
       };
-      document.querySelectorAll('[data-icon]').forEach(svg=>{svg.setAttribute('viewBox','0 0 24 24');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',icons[svg.dataset.icon]);svg.append(path);});
-      populatePapers();syncMeasures();
+      function refreshIcons(container = document){
+        container.querySelectorAll('[data-icon]').forEach(svg=>{
+          if (!svg.dataset.rendered && icons[svg.dataset.icon]) {
+            svg.setAttribute('viewBox','0 0 24 24');
+            const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+            path.setAttribute('d',icons[svg.dataset.icon]);
+            svg.append(path);
+            svg.dataset.rendered = 'true';
+          }
+        });
+      }
+      refreshIcons(document);
+      populatePapers();syncMeasures();updateHistoryBadge();
       fontReady=selectFont('fredoka','normal:700');
     })();
   </script>
